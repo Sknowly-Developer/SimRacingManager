@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using SimRacingManager.Components.PageComponents
+@using SimRacingManager.Core
 
 <div class="card">
     <div class="card-header text-center">
@@ -13,6 +14,8 @@
 
 @code
 {
-    public static Championship championship1 = new("Quarter 1");
-    public static Championship championship2 = new("Quarter 2");
+    public static List<Driver> q1Drivers = [new Driver("Adam"), new Driver("Damien"), new Driver("Harvey"), new Driver("Lee"), new Driver("Trent"), new Driver("Matthew")];
+    
+    public static Championship championship1 = new("Quarter 1", q1Drivers);
+    public static Championship championship2 = new("Quarter 2", q1Drivers);
 }
