@@ -5,12 +5,14 @@ public class Championship
     public string Name;
     public Guid GUID;
     public List<Driver> Drivers;
+    public List<Track> Tracks;
     
-    public Championship(string name, List<Driver> drivers)
+    public Championship(string name, List<Driver> drivers, List<Track> tracks)
     {
         Name = $"{name} Championship";
         GUID = Guid.NewGuid();
         Drivers = drivers;
+        Tracks = tracks;
     }
 
     /// <summary>

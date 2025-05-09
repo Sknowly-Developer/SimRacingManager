@@ -1,13 +1,16 @@
 ﻿@page "/ChampionshipDetails/{championshipGUID:guid}"
 @using SimRacingManager.Core
+@using SimRacingManager.Components.PageComponents
 <h3>@newChampionship.Name</h3>
 <p>There are @newChampionship.Drivers.Count drivers competing in this Championship.</p>
+
+<TrackCard track="newChampionship.Tracks[0]" />
 
 @code {
     [Parameter]
     public Guid championshipGUID { get; set; }
 
-    public Championship newChampionship = new(string.Empty, new List<Driver>([new Driver(string.Empty)]));
+    public Championship newChampionship = new(string.Empty, new List<Driver>([new Driver(string.Empty)]), new List<Track>([new Track(string.Empty)]));
     
     protected override void OnInitialized()
     {
