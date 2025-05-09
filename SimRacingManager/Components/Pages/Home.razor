@@ -1,16 +1,9 @@
 ﻿@page "/"
+@using SimRacingManager.Components.PageComponents
 
-<PageTitle>Home</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<br/><br/>
-
-<p>@championship1.Name</p>
+<ChampionshipCard Championship="championship1" />
 
 @code
 {
-    Championship championship1 = new Championship("Q1 - 2025");
+    Championship championship1 = new("Q1 - 2025");
 }
