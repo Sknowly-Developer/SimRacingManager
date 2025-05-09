@@ -1,9 +1,18 @@
 ﻿@page "/"
 @using SimRacingManager.Components.PageComponents
 
-<ChampionshipCard Championship="championship1" />
+<div class="card">
+    <div class="card-header text-center">
+        2025
+    </div>
+    <ul class="list-group list-group-flush">
+        <ChampionshipCard Championship="championship1"/>
+        <ChampionshipCard Championship="championship2"/>
+    </ul>
+</div>
 
 @code
 {
-    Championship championship1 = new("Q1 - 2025");
+    Championship championship1 = new("Quarter 1");
+    Championship championship2 = new("Quarter 2");
 }
