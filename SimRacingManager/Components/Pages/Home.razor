@@ -7,15 +7,15 @@
         2025
     </div>
     <ul class="list-group list-group-flush">
-        <ChampionshipCard Championship="championship1"/>
         <ChampionshipCard Championship="championship2"/>
+        <ChampionshipCard Championship="championship1"/>
     </ul>
 </div>
 
 @code
 {
     public static List<Driver> q1Drivers = [new Driver("Adam"), new Driver("Damien"), new Driver("Harvey"), new Driver("Lee"), new Driver("Trent"), new Driver("Matthew")];
-    public static List<Track> q1Tracks = [new Track("Road America")];
+    public static List<Track> q1Tracks = [new Track("Road America"), new Track("Watkins Glen"), new Track("Virginia International"), new Track("Sebring")];
     
     public static Championship championship1 = new("Quarter 1", q1Drivers, q1Tracks);
     public static Championship championship2 = new("Quarter 2", q1Drivers, q1Tracks);
