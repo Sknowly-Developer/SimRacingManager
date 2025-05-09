@@ -1,0 +1,21 @@
+﻿@page "/ChampionshipDetails/{championshipGUID:guid}"
+<h3>@newChampionship.Name</h3>
+
+@code {
+    [Parameter]
+    public Guid championshipGUID { get; set; }
+
+    public Championship newChampionship = new(string.Empty);
+    
+    protected override void OnInitialized()
+    {
+        if (Home.championship1.GrabInstanceFromGUID(championshipGUID) != null)
+        {
+            newChampionship = Home.championship1.GrabInstanceFromGUID(championshipGUID);
+        }
+        else
+        {
+            newChampionship = Home.championship2.GrabInstanceFromGUID(championshipGUID);   
+        }
+    }
+}
