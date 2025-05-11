@@ -2,6 +2,7 @@
 
 public class Championship
 {
+    // TODO: Add a year parameter so championships can be sorted by year.
     public string Name;
     public Guid GUID;
     public List<Driver> Drivers;
@@ -20,7 +21,7 @@ public class Championship
     /// </summary>
     /// <param name="guid">GUID of the championship you want to compare.</param>
     /// <returns>A championship instance or null</returns>
-    public Championship GrabInstanceFromGUID(Guid guid)
+    public Championship GrabInstanceFromGuid(Guid guid)
     {
         if (GUID == guid)
         { 

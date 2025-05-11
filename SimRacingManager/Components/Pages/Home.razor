@@ -18,11 +18,7 @@
 
 @code
 {
-    private static List<Driver> _q1Drivers = [new("Adam"), new("Damien"), new("Harvey"), new("Lee"), new("Trent"), new("Matthew")];
-    private List<Championship> _championships = [ChampionshipQ1, ChampionshipQ2];
-    
-    public static Championship ChampionshipQ2 = new("Quarter 2", _q1Drivers, [Tracks.RoadAmerica, Tracks.WatkinsGlen, Tracks.VirginiaInternationalRaceway, Tracks.Sebring]);
-    public static Championship ChampionshipQ1 = new("Quarter 1", _q1Drivers, [Tracks.RoadAmerica]);
+    private List<Championship> _championships = [Championships.Y2025Q1, Championships.Y2025Q2];
 
     protected override void OnInitialized()
     {

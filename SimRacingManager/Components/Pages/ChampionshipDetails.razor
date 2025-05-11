@@ -1,5 +1,7 @@
 ﻿@page "/ChampionshipDetails/{ChampionshipGuid:guid}"
+
 @using SimRacingManager.Core
+@using SimRacingManager.Data
 @using SimRacingManager.Components.PageComponents
 
 <h3>@_newChampionship.Name</h3>
@@ -20,15 +22,16 @@
 
     private Championship _newChampionship = new(string.Empty, [new Driver(string.Empty)], [new Track(string.Empty)]);
     
+    // TODO: Fix this mess.
     protected override void OnInitialized()
     {
-        if (Home.ChampionshipQ1.GrabInstanceFromGUID(ChampionshipGuid) != null)
+        if (Championships.Y2025Q1.GrabInstanceFromGuid(ChampionshipGuid) != null)
         {
-            _newChampionship = Home.ChampionshipQ1.GrabInstanceFromGUID(ChampionshipGuid);
+            _newChampionship = Championships.Y2025Q1.GrabInstanceFromGuid(ChampionshipGuid);
         }
         else
         {
-            _newChampionship = Home.ChampionshipQ2.GrabInstanceFromGUID(ChampionshipGuid);   
+            _newChampionship = Championships.Y2025Q2.GrabInstanceFromGuid(ChampionshipGuid);   
         }
     }
 }
