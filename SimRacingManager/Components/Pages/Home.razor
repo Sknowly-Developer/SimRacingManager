@@ -9,15 +9,24 @@
         2025
     </div>
     <ul class="list-group list-group-flush">
-        <ChampionshipCard Championship="championship2"/>
-        <ChampionshipCard Championship="championship1"/>
+        @foreach (var championship in _championships)
+        {
+            <ChampionshipCard Championship="championship"/>   
+        }
     </ul>
 </div>
 
 @code
 {
-    public static List<Driver> q1Drivers = [new("Adam"), new("Damien"), new("Harvey"), new("Lee"), new("Trent"), new("Matthew")];
+    private static List<Driver> _q1Drivers = [new("Adam"), new("Damien"), new("Harvey"), new("Lee"), new("Trent"), new("Matthew")];
+    private List<Championship> _championships = [ChampionshipQ1, ChampionshipQ2];
     
-    public static Championship championship2 = new("Quarter 2", q1Drivers, [Tracks.RoadAmerica, Tracks.WatkinsGlen, Tracks.VirginiaInternationalRaceway, Tracks.Sebring]);
-    public static Championship championship1 = new("Quarter 1", q1Drivers, [Tracks.RoadAmerica]);
+    public static Championship ChampionshipQ2 = new("Quarter 2", _q1Drivers, [Tracks.RoadAmerica, Tracks.WatkinsGlen, Tracks.VirginiaInternationalRaceway, Tracks.Sebring]);
+    public static Championship ChampionshipQ1 = new("Quarter 1", _q1Drivers, [Tracks.RoadAmerica]);
+
+    protected override void OnInitialized()
+    {
+        // Order based on latest championship.
+        _championships.Reverse();
+    }
 }
