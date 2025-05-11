@@ -4,7 +4,7 @@ namespace SimRacingManager.Data;
 
 public static class Tracks
 {
-    public static Track RoadAmerica = new Track("Road America", "");
+    public static Track RoadAmerica = new Track("Road America", "", [new Track("Road America (Bend)", ""), new Track("Road America STT", "")]);
     public static Track WatkinsGlen = new Track("Watkins Glen", "");
     public static Track VirginiaInternationalRaceway = new Track("Virginia International Raceway", "");
     public static Track Sebring = new Track("Sebring", "");
