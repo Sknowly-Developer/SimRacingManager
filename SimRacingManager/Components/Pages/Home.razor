@@ -1,6 +1,9 @@
 ﻿@page "/"
 
+@using SimRacingManager.Components.Layout
 @using SimRacingManager.Data
+
+@rendermode InteractiveServer
 
 @* TODO: Reverse the order of the championships, from newest to oldest. So Q4 to Q1 *@
 @* TODO: Add each year in dynamically as well *@
@@ -20,3 +23,5 @@
         }
     </ul>
 </div>
+
+<MudSwitch @bind-Value="MainLayout._isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>

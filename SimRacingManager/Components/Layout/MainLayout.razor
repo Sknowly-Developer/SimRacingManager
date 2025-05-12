@@ -1,19 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
+@* Required *@
+<MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="_theme" />
+<MudPopoverProvider />
+
+<MudDialogProvider /> @* Needed for dialogs *@
+<MudSnackbarProvider /> @* Needed for snackbars *@
+
 <div class="page">
     @*<div class="sidebar">
         <NavMenu/>
     </div>*@
-    
-    @* Required *@
-    <MudThemeProvider />
-    <MudPopoverProvider />
-
-    @* Needed for dialogs *@
-    <MudDialogProvider />
-
-    @* Needed for snackbars *@
-    <MudSnackbarProvider />
     
     <main>
         <div class="top-row px-4">
@@ -33,3 +30,8 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    public static bool _isDarkMode;
+    private MudTheme _theme = new();
+}
