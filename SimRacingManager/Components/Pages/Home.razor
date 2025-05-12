@@ -9,7 +9,7 @@
         2025
     </div>
     <ul class="list-group list-group-flush">
-        @foreach (var championship in _championships)
+        @foreach (Championship championship in Championships.ChampionshipsList)
         {
             @for (var championshipYear = championship.Year; championshipYear == 2025; championshipYear++) /* Looping through championships to check the years */
             {
@@ -23,11 +23,10 @@
 
 @code
 {
-    private List<Championship> _championships = [Championships.Y2025Q1, Championships.Y2025Q2];
-
     protected override void OnInitialized()
     {
         // Order based on latest championship.
-        _championships.Reverse();
+        // TODO: Fix this from reversing everytime the page is opened.
+        // Championships.ChampionshipsList.Reverse();
     }
 }

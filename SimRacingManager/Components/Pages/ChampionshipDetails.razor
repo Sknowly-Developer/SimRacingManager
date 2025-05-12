@@ -7,7 +7,7 @@
 <p>There are @_newChampionship.Drivers.Count drivers competing in this Championship.</p>
 
 <div class="row row-cols-1 row-cols-md-2 g-4">
-    @foreach (var track in _newChampionship.Tracks)
+    @foreach (Track track in _newChampionship.Tracks)
     {
         <div class="col">
             <div class="card">
@@ -25,18 +25,18 @@
     [Parameter]
     public Guid ChampionshipGuid { get; set; }
 
-    private Championship _newChampionship = new(string.Empty, 0000, [new Driver(string.Empty)], [new Track(string.Empty)]);
+    // Doesn't matter if this is null, it should always be assigned an instance.
+    private Championship _newChampionship;
     
     // TODO: Fix this mess.
     protected override void OnInitialized()
     {
-        if (Championships.Y2025Q1.GrabInstanceFromGuid(ChampionshipGuid) != null)
+        foreach (Championship championship in Championships.ChampionshipsList)
         {
-            _newChampionship = Championships.Y2025Q1.GrabInstanceFromGuid(ChampionshipGuid);
-        }
-        else
-        {
-            _newChampionship = Championships.Y2025Q2.GrabInstanceFromGuid(ChampionshipGuid);   
+            if (championship.GUID == ChampionshipGuid)
+            {
+                _newChampionship = championship;
+            }
         }
     }
 }
