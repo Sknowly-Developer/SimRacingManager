@@ -16,19 +16,4 @@ public class Championship
         Drivers = drivers;
         Tracks = tracks;
     }
-
-    /// <summary>
-    /// Compare the current instance GUID with another GUID.
-    /// </summary>
-    /// <param name="guid">GUID of the championship you want to compare.</param>
-    /// <returns>A championship instance or null</returns>
-    public Championship GrabInstanceFromGuid(Guid guid)
-    {
-        if (GUID == guid)
-        { 
-            return this;
-        }
-
-        return null;
-    }
 }

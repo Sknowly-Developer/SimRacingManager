@@ -4,21 +4,31 @@
 @using SimRacingManager.Data
 
 <h3>@_newChampionship.Name</h3>
-<p>There are @_newChampionship.Drivers.Count drivers competing in this Championship.</p>
 
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    @foreach (Track track in _newChampionship.Tracks)
-    {
-        <div class="col">
-            <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">@track.Name</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                </div>
-            </div>
-        </div>
-    }
+<div class="card">
+    <div class="card-header text-center">
+        Drivers
+    </div>
+    <ul class="list-group list-group-flush">
+        @foreach (var driver in _newChampionship.Drivers)
+        {
+            <li class="list-group-item">@driver.Name</li>
+        }
+    </ul>
+</div>
+
+<br/>
+
+<div class="card">
+    <div class="card-header text-center">
+        Tracks
+    </div>
+    <ul class="list-group list-group-flush">
+        @foreach (var track in _newChampionship.Tracks)
+        {
+            <li class="list-group-item">@track.Name</li>
+        }
+    </ul>
 </div>
 
 @code {
@@ -29,7 +39,7 @@
 
     protected override void OnInitialized()
     {
-        foreach (Championship championship in Championships.ChampionshipsList)
+        foreach (var championship in Championships.ChampionshipsList)
         {
             if (championship.GUID == ChampionshipGuid)
             {

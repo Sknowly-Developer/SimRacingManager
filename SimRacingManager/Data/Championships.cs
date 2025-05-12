@@ -4,8 +4,8 @@ namespace SimRacingManager.Data;
 
 public static class Championships
 {
-    private static Championship Y2025Q1 = new("Quarter 1", 2025, [Drivers.Adam, Drivers.Damien, Drivers.Harvey, Drivers.Lee, Drivers.Trent, Drivers.Matthew], [Tracks.RoadAmerica]);
-    private static Championship Y2025Q2 = new("Quarter 2", 2025, [Drivers.Adam, Drivers.Damien, Drivers.Harvey, Drivers.Lee, Drivers.Trent, Drivers.Matthew], [Tracks.RoadAmerica, Tracks.WatkinsGlen, Tracks.VirginiaInternationalRaceway, Tracks.Sebring]);
+    private static Championship Y2025Q1 = new("Quarter 1", 2025, [Drivers.Adam, Drivers.Damien, Drivers.Harvey, Drivers.Lee, Drivers.Matthew, Drivers.Trent], [Tracks.RoadAmerica]);
+    private static Championship Y2025Q2 = new("Quarter 2", 2025, [Drivers.Adam, Drivers.Damien, Drivers.Harvey, Drivers.Lee, Drivers.Matthew, Drivers.Trent], [Tracks.RoadAmerica, Tracks.WatkinsGlen, Tracks.VirginiaInternationalRaceway, Tracks.Sebring]);
 
     public static List<Championship> ChampionshipsList = [Y2025Q1, Y2025Q2];
 }
