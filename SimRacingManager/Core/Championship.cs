@@ -2,15 +2,16 @@
 
 public class Championship
 {
-    // TODO: Add a year parameter so championships can be sorted by year.
     public string Name;
+    public int Year;
     public Guid GUID;
     public List<Driver> Drivers;
     public List<Track> Tracks;
     
-    public Championship(string name, List<Driver> drivers, List<Track> tracks)
+    public Championship(string name, int year, List<Driver> drivers, List<Track> tracks)
     {
         Name = $"{name} Championship";
+        Year = year;
         GUID = Guid.NewGuid();
         Drivers = drivers;
         Tracks = tracks;
