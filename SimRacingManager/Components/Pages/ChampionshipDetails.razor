@@ -24,11 +24,9 @@
 @code {
     [Parameter]
     public Guid ChampionshipGuid { get; set; }
-
-    // Doesn't matter if this is null, it should always be assigned an instance.
-    private Championship _newChampionship;
     
-    // TODO: Fix this mess.
+    private Championship _newChampionship; // Doesn't matter if this is null, it should always be assigned an instance.
+
     protected override void OnInitialized()
     {
         foreach (Championship championship in Championships.ChampionshipsList)
