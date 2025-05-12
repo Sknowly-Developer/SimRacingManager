@@ -5,17 +5,17 @@
 
 <h3>@_newChampionship.Name</h3>
 
-<div class="card">
-    <div class="card-header text-center">
-        Drivers
-    </div>
-    <ul class="list-group list-group-flush">
-        @foreach (var driver in _newChampionship.Drivers)
-        {
-            <li class="list-group-item">@driver.Name</li>
-        }
-    </ul>
-</div>
+<MudTable Items="@_newChampionship.Drivers">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Drivers</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+    </RowTemplate>
+</MudTable>
 
 <br/>
 
