@@ -9,8 +9,7 @@
 
 @* TODO: Reverse the order of the championships, from newest to oldest. So Q4 to Q1 *@
 @* TODO: Add each year in dynamically as well *@
-@* TODO: Only show the championships that have the year 2025, again... *@
-<MudTable T="Championship" Items="@Championships.ChampionshipsList" Hover="true" RowClass="cursor-pointer" OnRowClick="RowClickEvent">
+<MudTable T="Championship" Items="@Championships.ChampionshipsList" Filter="Filter" Hover="true" RowClass="cursor-pointer" OnRowClick="RowClickEvent">
     <ToolBarContent>
         <MudText Typo="Typo.h6">2025</MudText>
     </ToolBarContent>
@@ -23,6 +22,24 @@
 </MudTable>
 
 @code {
+    protected override void OnInitialized()
+    {
+        foreach (var championship in Championships.ChampionshipsList)
+        {
+            Filter(championship);
+        }
+    }
+
+    private bool Filter(Championship championship)
+    {
+        if (championship.Year == 2025)
+        {
+            return true;
+        }
+
+        return false;
+    }
+    
     private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
     {
         Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item.GUID}");
