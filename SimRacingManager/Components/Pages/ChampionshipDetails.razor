@@ -2,6 +2,7 @@
 
 @using SimRacingManager.Core
 @using SimRacingManager.Data
+@using SimRacingManager.Enumerations
 
 <MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_newChampionship.Name</MudText>
 
@@ -23,11 +24,17 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">Tracks</MudText>
     </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col style="width: 1%" />
+    </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
+        <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -36,14 +43,30 @@
     public Guid ChampionshipGuid { get; set; }
     
     private Championship _newChampionship; // Doesn't matter if this is null, it should always be assigned an instance.
-
+    private Dictionary<Status, Color> _statusColourDictionary = new();
+    
     protected override void OnInitialized()
     {
+        _statusColourDictionary.Add(Status.Completed, Color.Error);
+        _statusColourDictionary.Add(Status.Ongoing, Color.Success);
+        _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
+        
         foreach (var championship in Championships.ChampionshipsList)
         {
             if (championship.GUID == ChampionshipGuid)
             {
                 _newChampionship = championship;
+            }
+
+            foreach (var track in championship.Tracks)
+            {
+                foreach (var colour in _statusColourDictionary)
+                {
+                    if (colour.Key == track.Status)
+                    {
+                        track.StatusColour = colour.Value;
+                    }
+                }
             }
         }
     }

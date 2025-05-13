@@ -7,7 +7,7 @@ public class Championship
     public string Name;
     public int Year;
     public Status Status;
-    public MudBlazor.Color ChampionshipStatusColour;
+    public MudBlazor.Color StatusColour;
     public Guid GUID;
     public List<Driver> Drivers;
     public List<Track> Tracks;
