@@ -2,6 +2,7 @@
 
 @using SimRacingManager.Core
 @using SimRacingManager.Data
+@using SimRacingManager.Enumerations
 
 @inject NavigationManager Navigation
 
@@ -15,18 +16,33 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>
+        <MudTh>Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.ChampionshipStatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
 </MudTable>
 
 @code {
+
+    private Dictionary<Status, Color> _testing = new();
+    
     protected override void OnInitialized()
     {
+        _testing.Add(Status.Completed, Color.Error);
+        _testing.Add(Status.Ongoing, Color.Success);
+        _testing.Add(Status.Upcoming, Color.Warning);
+
         foreach (var championship in Championships.ChampionshipsList)
-        {
-            Filter(championship);
+        { 
+            foreach (var colour in _testing)
+            {
+                if (colour.Key == championship.Status)
+                {
+                    championship.ChampionshipStatusColour = colour.Value;
+                }
+            }
         }
     }
 
