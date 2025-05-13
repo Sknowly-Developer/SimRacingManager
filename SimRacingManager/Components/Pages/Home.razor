@@ -1,27 +1,30 @@
 ﻿@page "/"
 
-@using SimRacingManager.Components.Layout
+@using SimRacingManager.Core
 @using SimRacingManager.Data
+
+@inject NavigationManager Navigation
 
 @rendermode InteractiveServer
 
 @* TODO: Reverse the order of the championships, from newest to oldest. So Q4 to Q1 *@
 @* TODO: Add each year in dynamically as well *@
-<div class="card">
-    <div class="card-header text-center">
-        2025
-    </div>
-    <ul class="list-group list-group-flush">
-        @foreach (var championship in Championships.ChampionshipsList)
-        {
-            @for (var championshipYear = championship.Year; championshipYear == 2025; championshipYear++) /* Looping through championships to check the years */
-            {
-                <NavLink href="@($"ChampionshipDetails/{championship.GUID}")">
-                    <li class="list-group-item">@championship.Name</li>
-                </NavLink> 
-            }
-        }
-    </ul>
-</div>
+@* TODO: Only show the championships that have the year 2025, again... *@
+<MudTable T="Championship" Items="@Championships.ChampionshipsList" Hover="true" RowClass="cursor-pointer" OnRowClick="RowClickEvent">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">2025</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+    </RowTemplate>
+</MudTable>
 
-<MudSwitch @bind-Value="MainLayout._isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode"/>
+@code {
+    private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
+    {
+        Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item.GUID}");
+    }
+}

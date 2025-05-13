@@ -1,37 +1,25 @@
 ﻿@inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider @bind-IsDarkMode="_isDarkMode" Theme="_theme" />
+<MudThemeProvider />
 <MudPopoverProvider />
 
 <MudDialogProvider /> @* Needed for dialogs *@
 <MudSnackbarProvider /> @* Needed for snackbars *@
 
-<div class="page">
-    @*<div class="sidebar">
-        <NavMenu/>
-    </div>*@
-    
-    <main>
-        <div class="top-row px-4">
-            <NavLink href="" Match="NavLinkMatch.All">
-                <h4 style="margin-top: 0.5rem !important;">Sim Racing Manager</h4>
-            </NavLink>
-        </div>
-
-        <article class="content px-4">
+<MudLayout>
+    <MudAppBar>
+        <MudText Typo="Typo.h5">Sim Racing Manager</MudText>
+    </MudAppBar>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="pt-8">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-
-@code {
-    public static bool _isDarkMode;
-    private MudTheme _theme = new();
-}
