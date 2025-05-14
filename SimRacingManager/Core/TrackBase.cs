@@ -25,7 +25,7 @@ public abstract class TrackBase
         
         // Add the dictionary keys and values.
         _statusColourDictionary.Add(Status.Completed, Color.Error);
-        _statusColourDictionary.Add(Status.Ongoing, Color.Success);
+        _statusColourDictionary.Add(Status.Next, Color.Success);
         _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
 
         SetStatusColour();

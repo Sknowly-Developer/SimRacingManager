@@ -38,7 +38,7 @@ public static class Championships
             new WatkinsGlen(Status.Completed, new DateTime(2025, 4, 23)),
             new Virginia(Status.Completed, new DateTime(2025, 4, 30)),
             new Sebring(Status.Completed, new DateTime(2025, 5, 7)),
-            new LagunaSeca(Status.Upcoming, new DateTime(2025, 5, 21)),
+            new LagunaSeca(Status.Next, new DateTime(2025, 5, 21)),
             new Spielberg(Status.Upcoming, new DateTime(2025, 5, 28)),
             new Jerez(Status.Upcoming, new DateTime(2025, 6, 4)),
             new Nurburgring(Status.Upcoming, new DateTime(2025, 6, 11)),

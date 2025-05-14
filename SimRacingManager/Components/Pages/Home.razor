@@ -19,10 +19,12 @@
         <col />
         <col />
         <col />
+        <col />
         <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
+        <MudTh>Next</MudTh>
         <MudTh>Races</MudTh>
         <MudTh>Period</MudTh>
         <MudTh>Winner</MudTh>
@@ -30,6 +32,14 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+        @if (context.Next == null)
+        {
+            <MudTd DataLabel="Next"></MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="Color.Primary">@context.TimeRemainingNextTrack Days</MudChip></MudTd>
+        }
         <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
         <MudTd DataLabel="Period">@context.CombinedDates</MudTd>
         @if (context.Winner == null)
@@ -59,6 +69,7 @@
         {
             championship.TracksCompletedCount();
             championship.CombineDates();
+            championship.NextRace();
             
             foreach (var colour in _statusColourDictionary)
             {

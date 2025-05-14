@@ -4,16 +4,20 @@ namespace SimRacingManager.Core;
 
 public class Championship
 {
-    public string Name;
     public int Year;
+    public string Name;
+    public TrackBase Next;
     public string CombinedDates;
-    public int TracksCompleted;
     public Driver Winner;
     public Status Status;
-    public MudBlazor.Color StatusColour;
-    public Guid Guid;
+    
     public List<Driver> Drivers;
     public List<TrackBase> Tracks;
+    
+    public Guid Guid;
+    public MudBlazor.Color StatusColour;
+    public int TracksCompleted;
+    public string TimeRemainingNextTrack;
     
     public Championship(string name, int year, Status status, List<Driver> drivers, List<TrackBase> tracks, Driver winner = null)
     {
@@ -45,6 +49,9 @@ public class Championship
         }
     }
 
+    /// <summary>
+    /// Loop through all track dates, grab the first and last indexes - and combine them into a string.
+    /// </summary>
     public void CombineDates()
     {
         List<DateTime> trackDates = new();
@@ -55,5 +62,27 @@ public class Championship
         }
         
         CombinedDates = $"{trackDates[0].Date.ToShortDateString()} to {trackDates[trackDates.Count - 1].Date.ToShortDateString()}";
+    }
+
+    /// <summary>
+    /// Grab a reference to the Track that has the status 'Next' and store it.
+    /// </summary>
+    public void NextRace()
+    {
+        foreach (var track in Tracks)
+        {
+            if (track.Status == Status.Next)
+            {
+                Next = track;
+            }
+        }
+
+        if (Next == null)
+        {
+            return;
+        }
+        
+        TimeSpan daysRemaining = Next.Date - DateTime.Today;
+        TimeRemainingNextTrack = daysRemaining.Days.ToString();
     }
 }
