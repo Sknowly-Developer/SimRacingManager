@@ -46,5 +46,5 @@ public static class Championships
             new Hockenheimring(Status.Upcoming, new DateTime(2025, 6, 25))
         ]);
 
-    public static List<Championship> ChampionshipsList = [Y2025Q1, Y2025Q2];
+    public static List<Championship> ChampionshipsList = [Y2025Q2, Y2025Q1];
 }
