@@ -18,17 +18,20 @@
         <col />
         <col />
         <col />
+        <col />
         <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Races</MudTh>
+        <MudTh>Period</MudTh>
         <MudTh>Winner</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Races">@context.TrackCompleted / @context.Tracks.Count</MudTd>
+        <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
+        <MudTd DataLabel="Period">@context.CombinedDates</MudTd>
         @if (context.Winner == null)
         {
             <MudTd DataLabel="Winner"></MudTd>
@@ -54,7 +57,8 @@
 
         foreach (var championship in Championships.ChampionshipsList)
         {
-            championship.TracksCompleted();
+            championship.TracksCompletedCount();
+            championship.CombineDates();
             
             foreach (var colour in _statusColourDictionary)
             {
