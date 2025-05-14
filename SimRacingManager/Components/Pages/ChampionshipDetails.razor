@@ -2,7 +2,6 @@
 
 @using SimRacingManager.Core
 @using SimRacingManager.Data
-@using SimRacingManager.Enumerations
 
 <MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_newChampionship.Name</MudText>
 
@@ -26,14 +25,17 @@
     </ToolBarContent>
     <ColGroup>
         <col />
+        <col />
         <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
+        <MudTh>Date</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Date">@context.Date.ToShortDateString()</MudTd>
         <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
 </MudTable>

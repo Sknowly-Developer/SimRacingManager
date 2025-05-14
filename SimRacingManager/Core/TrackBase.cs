@@ -6,14 +6,16 @@ namespace SimRacingManager.Core;
 public abstract class TrackBase
 {
     public string Name;
+    public DateTime Date;
     public Status Status;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = new();
     
-    public TrackBase(Status status, string name = null)
+    protected TrackBase(DateTime date, Status status, string name = null)
     {
-        Name = name;
+        Date = date;
         Status = status;
+        Name = name;
     }
 
     public void Initialize()

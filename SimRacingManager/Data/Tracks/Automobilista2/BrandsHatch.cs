@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class BrandsHatch : TrackBase
 {
-    public BrandsHatch(Status status, string name = null) : base(status, name)
+    public BrandsHatch(Status status, DateTime date, string name = null) : base(date, status, name)
     {
         Name = "Brands Hatch";
     }

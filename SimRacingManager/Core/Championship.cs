@@ -6,8 +6,6 @@ public class Championship
 {
     public string Name;
     public int Year;
-    public DateTime StartingDate;
-    public DateTime EndDate;
     public string CombinedDates;
     public int TracksCompleted;
     public Driver Winner;
@@ -17,12 +15,10 @@ public class Championship
     public List<Driver> Drivers;
     public List<TrackBase> Tracks;
     
-    public Championship(string name, int year, DateTime startingDate, DateTime endDate, Status status, List<Driver> drivers, List<TrackBase> tracks, Driver winner = null)
+    public Championship(string name, int year, Status status, List<Driver> drivers, List<TrackBase> tracks, Driver winner = null)
     {
         Name = $"{name} Championship";
         Year = year;
-        StartingDate = startingDate;
-        EndDate = endDate;
         Status = status;
         Guid = Guid.NewGuid();
         Drivers = drivers;
@@ -51,6 +47,13 @@ public class Championship
 
     public void CombineDates()
     {
-        CombinedDates = $"{StartingDate.ToShortDateString()} to {EndDate.Date.ToShortDateString()}";
+        List<DateTime> trackDates = new();
+        
+        foreach (var track in Tracks)
+        {
+            trackDates.Add(track.Date);
+        }
+        
+        CombinedDates = $"{trackDates[0].Date.ToShortDateString()} to {trackDates[trackDates.Count - 1].Date.ToShortDateString()}";
     }
 }
