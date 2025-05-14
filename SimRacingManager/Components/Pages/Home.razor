@@ -17,15 +17,18 @@
     <ColGroup>
         <col />
         <col />
+        <col />
         <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
+        <MudTh>Races</MudTh>
         <MudTh>Winner</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Races">@context.TrackCompleted / @context.Tracks.Count</MudTd>
         @if (context.Winner == null)
         {
             <MudTd DataLabel="Winner"></MudTd>
@@ -50,7 +53,9 @@
         _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
 
         foreach (var championship in Championships.ChampionshipsList)
-        { 
+        {
+            championship.TracksCompleted();
+            
             foreach (var colour in _statusColourDictionary)
             {
                 if (colour.Key == championship.Status)
