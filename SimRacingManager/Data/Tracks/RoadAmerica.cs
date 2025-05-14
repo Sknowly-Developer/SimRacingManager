@@ -1,10 +1,12 @@
 ﻿using SimRacingManager.Core;
+using SimRacingManager.Enumerations;
 
 namespace SimRacingManager.Data.Tracks;
 
-public class RoadAmerica : Track
+public class RoadAmerica : TrackBase
 {
-    public RoadAmerica(string name = "Road America", List<Track>? layouts = null) : base(name, layouts)
+    public RoadAmerica(Status status, string name = null) : base(name, status)
     {
+        Name = "Road America";
     }
 }

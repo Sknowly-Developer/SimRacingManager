@@ -43,31 +43,20 @@
     public Guid ChampionshipGuid { get; set; }
     
     private Championship _newChampionship; // Doesn't matter if this is null, it should always be assigned an instance.
-    private Dictionary<Status, Color> _statusColourDictionary = new();
     
     protected override void OnInitialized()
     {
-        _statusColourDictionary.Add(Status.Completed, Color.Error);
-        _statusColourDictionary.Add(Status.Ongoing, Color.Success);
-        _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
-        
         foreach (var championship in Championships.ChampionshipsList)
         {
             if (championship.GUID == ChampionshipGuid)
             {
                 _newChampionship = championship;
             }
+        }
 
-            foreach (var track in championship.Tracks)
-            {
-                foreach (var colour in _statusColourDictionary)
-                {
-                    if (colour.Key == track.Status)
-                    {
-                        track.StatusColour = colour.Value;
-                    }
-                }
-            }
+        foreach (var tracks in _newChampionship.Tracks)
+        {
+            tracks.Initialize(); // Probably not the best place to do this, but it should do for now.
         }
     }
 }

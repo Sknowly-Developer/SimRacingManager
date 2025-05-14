@@ -10,9 +10,9 @@ public class Championship
     public MudBlazor.Color StatusColour;
     public Guid GUID;
     public List<Driver> Drivers;
-    public List<Track> Tracks;
+    public List<TrackBase> Tracks;
     
-    public Championship(string name, int year, Status status, List<Driver> drivers, List<Track> tracks)
+    public Championship(string name, int year, Status status, List<Driver> drivers, List<TrackBase> tracks)
     {
         Name = $"{name} Championship";
         Year = year;
