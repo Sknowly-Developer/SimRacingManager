@@ -8,7 +8,8 @@ public static class Championships
 {
     private static Championship Y2025Q1 = new("Quarter 1", 2025, Status.Completed, 
         [Drivers.Adam, Drivers.Damien, Drivers.Harvey, Drivers.Lee, Drivers.Matthew, Drivers.Trent], 
-        [new BrandsHatch(Status.Completed), new DoningtonPark(Status.Completed), new OultonPark(Status.Completed), new Kyalami(Status.Completed), new Interlagos(Status.Completed), new Adelaide(Status.Completed), new Bathurst(Status.Completed)]);
+        [new BrandsHatch(Status.Completed), new DoningtonPark(Status.Completed), new OultonPark(Status.Completed), new Kyalami(Status.Completed), new Interlagos(Status.Completed), new Adelaide(Status.Completed), new Bathurst(Status.Completed)], 
+        Drivers.Trent);
     
     private static Championship Y2025Q2 = new("Quarter 2", 2025, Status.Ongoing, 
         [Drivers.Adam, Drivers.Damien, Drivers.Harvey, Drivers.Lee, Drivers.Matthew, Drivers.Trent], 

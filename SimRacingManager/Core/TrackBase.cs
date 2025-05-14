@@ -8,7 +8,7 @@ public abstract class TrackBase
     public string Name;
     public Status Status;
     public Color StatusColour;
-    public Dictionary<Status, Color> _statusColourDictionary = new();
+    private Dictionary<Status, Color> _statusColourDictionary = new();
     
     public TrackBase(Status status, string name = null)
     {
