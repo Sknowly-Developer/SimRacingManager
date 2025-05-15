@@ -11,7 +11,7 @@
 @* TODO: Add each year in dynamically as well *@
 <MudTable T="Championship" Items="@Championships.ChampionshipsList" Filter="Filter" Hover="true" RowClass="cursor-pointer" OnRowClick="RowClickEvent">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">2025 Calendar</MudText>
+        <MudText Typo="Typo.h6">2025 Season</MudText>
     </ToolBarContent>
     <ColGroup>
         <col />
@@ -68,7 +68,6 @@
         {
             championship.TracksCompletedCount();
             championship.CombineDates();
-            championship.NextRace();
             
             foreach (var colour in _statusColourDictionary)
             {
@@ -77,6 +76,13 @@
                     championship.StatusColour = colour.Value;
                 }
             }
+
+            foreach (var track in championship.Tracks)
+            {
+                track.Initialize();
+            }
+            
+            championship.NextRace();
         }
     }
     

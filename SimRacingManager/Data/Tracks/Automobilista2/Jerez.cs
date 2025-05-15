@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Jerez : TrackBase
 {
-    public Jerez(Status status, DateTime date, string name = null) : base(date, status, name)
+    public Jerez(DateTime date, string name = null) : base(date, name)
     {
         Name = "Jerez";
     }

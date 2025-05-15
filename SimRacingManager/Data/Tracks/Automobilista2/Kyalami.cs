@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Kyalami : TrackBase
 {
-    public Kyalami(Status status, DateTime date, string name = null) : base(date, status, name)
+    public Kyalami(DateTime date, string name = null) : base(date, name)
     {
         Name = "Kyalami";
     }

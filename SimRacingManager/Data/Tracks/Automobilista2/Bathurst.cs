@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Bathurst : TrackBase
 {
-    public Bathurst(Status status, DateTime date, string name = null) : base(date, status, name)
+    public Bathurst(DateTime date, string name = null) : base(date, name)
     {
         Name = "Bathurst";
     }

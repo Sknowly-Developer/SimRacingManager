@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Nurburgring : TrackBase
 {
-    public Nurburgring(Status status, DateTime date, string name = null) : base(date, status, name)
+    public Nurburgring(DateTime date, string name = null) : base(date, name)
     {
         Name = "Nurburgring";
     }

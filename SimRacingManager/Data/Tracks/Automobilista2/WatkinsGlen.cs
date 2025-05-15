@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class WatkinsGlen : TrackBase
 {
-    public WatkinsGlen(Status status, DateTime date, string name = null) : base(date, status, name)
+    public WatkinsGlen(DateTime date, string name = null) : base(date, name)
     {
         Name = "Watkins Glen";
     }

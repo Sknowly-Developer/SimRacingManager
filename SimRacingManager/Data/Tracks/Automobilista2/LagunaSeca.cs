@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class LagunaSeca : TrackBase
 {
-    public LagunaSeca(Status status, DateTime date, string name = null) : base(date, status, name)
+    public LagunaSeca(DateTime date, string name = null) : base(date, name)
     {
         Name = "Laguna Seca";
     }

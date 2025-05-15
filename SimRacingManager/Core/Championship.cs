@@ -6,7 +6,7 @@ public class Championship
 {
     public int Year;
     public string Name;
-    public TrackBase Next;
+    public TrackBase? Next;
     public string CombinedDates;
     public Driver Winner;
     public Status Status;
@@ -69,20 +69,36 @@ public class Championship
     /// </summary>
     public void NextRace()
     {
+        List<int> testingList = new();
+        
         foreach (var track in Tracks)
         {
-            if (track.Status == Status.Next)
+            if (track.Status != Status.Completed)
             {
-                Next = track;
+                var daysRemainingUntilNextTrack = track.Date - DateTime.Today;
+                testingList.Add(daysRemainingUntilNextTrack.Days);
             }
         }
 
-        if (Next == null)
+        if (testingList.Count == 0)
         {
+            Next = null;
             return;
         }
         
-        TimeSpan daysRemaining = Next.Date - DateTime.Today;
+        var minimumDaysOnList = testingList.Min();
+        
+        foreach (var track in Tracks)
+        {
+            var daysRemainingUntilNextTrack = track.Date - DateTime.Today;
+            if (daysRemainingUntilNextTrack.Days == minimumDaysOnList)
+            {
+                track.Status = Status.Next;
+                Next = track;
+            }
+        }
+        
+        var daysRemaining = Next.Date - DateTime.Today;
         TimeRemainingNextTrack = daysRemaining.Days.ToString();
     }
 }

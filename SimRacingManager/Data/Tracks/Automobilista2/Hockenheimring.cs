@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Hockenheimring : TrackBase
 {
-    public Hockenheimring(Status status, DateTime date, string name = null) : base(date, status, name)
+    public Hockenheimring(DateTime date, string name = null) : base(date, name)
     {
         Name = "Hockenheimring";
     }

@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class DoningtonPark : TrackBase
 {
-    public DoningtonPark(Status status, DateTime date, string name = null) : base(date, status, name)
+    public DoningtonPark(DateTime date, string name = null) : base(date, name)
     {
         Name = "Donington Park";
     }

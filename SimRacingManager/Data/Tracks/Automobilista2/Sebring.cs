@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Sebring : TrackBase
 {
-    public Sebring(Status status, DateTime date, string name = null) : base(date, status, name)
+    public Sebring(DateTime date, string name = null) : base(date, name)
     {
         Name = "Sebring";
     }

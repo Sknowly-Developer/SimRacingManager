@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Virginia : TrackBase
 {
-    public Virginia(Status status, DateTime date, string name = null) : base(date, status, name)
+    public Virginia(DateTime date, string name = null) : base(date, name)
     {
         Name = "Virginia";
     }
