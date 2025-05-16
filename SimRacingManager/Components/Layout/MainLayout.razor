@@ -9,12 +9,14 @@
 
 <MudLayout>
     <MudAppBar>
-        <MudText Typo="Typo.h5">
-            <MudNavLink Href="/">
-                Sim Racing Manager
-            </MudNavLink>
-        </MudText>
-        <MudSpacer />
+        <MudNavLink Href="/" Style="width: 17%">
+            <MudBadge Content="_currentVersion" Overlap="true" Class="mx-6 my-4">
+                <MudText Typo="Typo.h5">
+                    Sim Racing Manager
+                </MudText>
+            </MudBadge>
+        </MudNavLink>
+        <MudSpacer/>
         <MudText Align="Align.End">@_currentDate.ToShortDateString()</MudText>
     </MudAppBar>
     <MudMainContent>
@@ -32,4 +34,5 @@
 
 @code {
     private DateTime _currentDate = DateTime.Today;
+    private string _currentVersion = "PRE-ALPHA";
 }
