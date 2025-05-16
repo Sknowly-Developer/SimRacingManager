@@ -7,13 +7,15 @@ public abstract class TrackBase
 {
     public string Name;
     public DateTime Date;
+    public Driver? Winner;
     public Status Status = Status.Upcoming;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = new();
     
-    protected TrackBase(DateTime date, string name = null)
+    protected TrackBase(DateTime date, Driver? winner = null, string name = null)
     {
         Date = date;
+        Winner = winner;
         Name = name;
     }
 

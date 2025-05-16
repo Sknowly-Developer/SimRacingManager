@@ -32,16 +32,26 @@
     <ColGroup>
         <col />
         <col />
+        <col />
         <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Date</MudTh>
+        <MudTh>Winner</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Date">@context.Date.ToShortDateString()</MudTd>
+        @if (context.Winner != null)
+        {
+            <MudTd DataLabel="Winner">@context.Winner.Name</MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Winner"></MudTd>
+        }
         <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
 </MudTable>

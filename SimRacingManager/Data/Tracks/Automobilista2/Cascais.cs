@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class Cascais : TrackBase
 {
-    public Cascais(DateTime date, string name = null) : base(date, name)
+    public Cascais(DateTime date, Driver? winner = null, string name = null) : base(date, winner, name)
     {
         Name = "Cascais";
     }
