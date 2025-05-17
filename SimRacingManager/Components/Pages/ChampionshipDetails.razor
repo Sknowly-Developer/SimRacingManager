@@ -7,7 +7,7 @@
 
 <MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_newChampionship.Name</MudText>
 
-<MudTable ServerData="ServerReload">
+<MudTable ServerData="FetchDrivers">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Drivers</MudText>
     </ToolBarContent>
@@ -72,9 +72,6 @@
     
     protected override void OnInitialized()
     {
-        var testing = new DatabaseStuff();
-        testing.Initialise();
-        
         foreach (var championship in Championships.ChampionshipsList)
         {
             if (championship.Guid == ChampionshipGuid)
@@ -86,21 +83,23 @@
         foreach (var tracks in _newChampionship.Tracks)
         {
             tracks.SetStatusColour(); // Probably not the best place to do this, but it should do for now.
-        }
+        }   
     }
 
-    private async Task<TableData<Driver>> ServerReload(TableState state, CancellationToken token)
+    /// <summary>
+    /// Fetches all drivers from the database.
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="token"></param>
+    /// <returns>A TableData of the Driver class for each Driver object.</returns>
+    private async Task<TableData<Driver>> FetchDrivers(TableState state, CancellationToken token)
     {
-        // This is a hacky workaround for now, I need to do more research on async and await methods.
-        await Task.Delay(1000);
-
-        _newChampionship.Drivers = DatabaseStuff.Drivers;
+        // I have to fetch the data for each driver here, if I try to use a Task method to return a List of drivers then nothing happens.
+        var dataResult = await DatabaseManager.SupabaseClient.From<Driver>().Get(); 
         
-        var data = _newChampionship.Drivers;
+        var totalItems = dataResult.Models.Count;
 
-        var totalItems = data.Count;
-
-        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+        var pagedData = dataResult.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
 
         return new TableData<Driver> { TotalItems = totalItems, Items = pagedData };
     }

@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using SimRacingManager.Core
+@inherits LayoutComponentBase
 
 @* Required *@
 <MudThemeProvider />
@@ -35,4 +36,9 @@
 @code {
     private DateTime _currentDate = DateTime.Today;
     private string _currentVersion = "PRE-ALPHA";
+
+    protected override void OnInitialized()
+    {
+        DatabaseManager.Initialise();
+    }
 }
