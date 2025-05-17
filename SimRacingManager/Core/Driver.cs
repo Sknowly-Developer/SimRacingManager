@@ -7,7 +7,7 @@ namespace SimRacingManager.Core;
 public class Driver : BaseModel
 {
     [PrimaryKey("uuid")]
-    public Guid guid { get; set; }
+    public Guid Guid { get; set; }
     
     [Column("name")]
     public string Name { get; set; }

@@ -1,5 +1,7 @@
 ﻿@using SimRacingManager.Core
 @using SimRacingManager.Data
+@using SimRacingManager.Miscellaneous
+
 @inherits LayoutComponentBase
 
 @* Required *@
@@ -37,22 +39,20 @@
 @code {
     private DateTime _currentDate = DateTime.Today;
     private const string CurrentVersion = "PRE-ALPHA";
-
+    
     protected override void OnInitialized()
     {
         // Everything within this conditional shouldn't be called more than once.
         if (!Globals.HasDatabaseManagerBeenInitialised)
         {
+            var root = Directory.GetCurrentDirectory();
+            var dotenv = Path.Combine(root, "env.env");
+            DotEnv.Load(dotenv);
+
             DatabaseManager.Initialise();
-            test();
+            DatabaseManager.FetchAllData();
         }
 
         Globals.HasDatabaseManagerBeenInitialised = true;
-    }
-
-    private async void test()
-    {
-        var dataResult = await DatabaseManager.SupabaseClient.From<Driver>().Get();
-        Championships.Y2025Q1.Winner = dataResult.Models.Find(driver => driver.Name.Contains("Trent"));
     }
 }

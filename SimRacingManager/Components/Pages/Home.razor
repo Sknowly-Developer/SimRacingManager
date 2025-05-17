@@ -1,7 +1,6 @@
 ﻿@page "/"
 
 @using SimRacingManager.Core
-@using SimRacingManager.Data
 @using SimRacingManager.Enumerations
 
 @inject NavigationManager Navigation
@@ -9,7 +8,8 @@
 @rendermode InteractiveServer
 
 @* TODO: Add each year in dynamically as well *@
-<MudTable T="Championship" Items="@Championships.ChampionshipsList" Filter="Filter" Hover="true" RowClass="cursor-pointer" OnRowClick="RowClickEvent">
+@* TODO: Need to filter by Year again *@
+<MudTable ServerData="FetchChampionships" Hover="true" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">2025 Season</MudText>
     </ToolBarContent>
@@ -17,21 +17,24 @@
         <col />
         <col />
         <col />
+        @*<col />
         <col />
         <col />
-        <col style="width: 1%" />
+        <col style="width: 1%" />*@
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
-        <MudTh>Next</MudTh>
+        <MudTh>Year</MudTh>
+        @*<MudTh>Next</MudTh>
         <MudTh>Races</MudTh>
-        <MudTh>Period</MudTh>
+        <MudTh>Period</MudTh>*@
         <MudTh>Winner</MudTh>
-        <MudTh Style="text-align: center">Status</MudTh>
+        @*<MudTh Style="text-align: center">Status</MudTh>*@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        @if (context.Next == null)
+        <MudTd DataLabel="Year">@context.Year</MudTd>
+        @*@if (context.Next == null)
         {
             <MudTd DataLabel="Next"></MudTd>
         }
@@ -40,7 +43,7 @@
             <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="Color.Primary">@context.TimeRemainingNextTrack Days</MudChip></MudTd>
         }
         <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
-        <MudTd DataLabel="Period">@context.CombinedDates</MudTd>
+        <MudTd DataLabel="Period">@context.CombinedDates</MudTd>*@
         @if (context.Winner == null)
         {
             <MudTd DataLabel="Winner"></MudTd>
@@ -49,14 +52,20 @@
         {
             <MudTd DataLabel="Winner">@context.Winner.Name @context.Winner.Surname</MudTd>
         }
-        <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
+        @*<MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>*@
     </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No records found...</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Fetching data...</MudText>
+    </LoadingContent>
 </MudTable>
 
 @code {
     private Dictionary<Status, Color> _statusColourDictionary = new();
     
-    protected override void OnInitialized()
+    /*protected override void OnInitialized()
     {
         _statusColourDictionary.Clear();
         
@@ -64,7 +73,7 @@
         _statusColourDictionary.Add(Status.Ongoing, Color.Success);
         _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
 
-        foreach (var championship in Championships.ChampionshipsList)
+        foreach (var championship in _championships)
         {
             championship.TracksCompletedCount();
             championship.CombineDates();
@@ -84,20 +93,20 @@
             
             championship.NextRace();
         }
-    }
-    
-    private bool Filter(Championship championship)
-    {
-        if (championship.Year == 2025)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    }*/
     
     private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
     {
         Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item.Guid}");
+    }
+
+    private Task<TableData<Championship>> FetchChampionships(TableState state, CancellationToken token)
+    {
+        Championship.AssignChampionshipDriver();
+        
+        var totalItems = DatabaseManager.Championships.Count;
+        var pagedData = DatabaseManager.Championships.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+        
+        return Task.FromResult(new TableData<Championship> { TotalItems = totalItems, Items = pagedData });
     }
 }

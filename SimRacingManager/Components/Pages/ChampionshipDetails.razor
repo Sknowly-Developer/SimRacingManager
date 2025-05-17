@@ -1,7 +1,6 @@
 ﻿@page "/ChampionshipDetails/{ChampionshipGuid:guid}"
 
 @using SimRacingManager.Core
-@using SimRacingManager.Data
 
 @rendermode InteractiveServer
 
@@ -72,13 +71,13 @@
     
     protected override void OnInitialized()
     {
-        foreach (var championship in Championships.ChampionshipsList)
+        /*foreach (var championship in Championships.ChampionshipsList)
         {
             if (championship.Guid == ChampionshipGuid)
             {
                 _newChampionship = championship;
             }
-        }
+        }*/
 
         foreach (var tracks in _newChampionship.Tracks)
         {

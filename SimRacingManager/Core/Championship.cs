@@ -1,33 +1,54 @@
 ﻿using SimRacingManager.Enumerations;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
 namespace SimRacingManager.Core;
 
-public class Championship
+[Table("championships")]
+public class Championship : BaseModel
 {
-    public int Year;
-    public string Name;
+    [PrimaryKey("uuid")]
+    public Guid Guid { get; set; }
+    
+    [Column("name")]
+    public string Name { get; set; }
+    
+    [Column("year")]
+    public int Year { get; set; }
+    
+    [Column("winner")]
+    public Guid? WinnerGuid { get; set; }
+    public Driver? Winner;
+    
+    
+    
+    
     public TrackBase? Next;
     public string CombinedDates;
-    public Driver? Winner;
     public Status Status;
-    
     public List<Driver> Drivers;
     public List<TrackBase> Tracks;
-    
-    public Guid Guid;
     public MudBlazor.Color StatusColour;
     public int TracksCompleted;
     public string TimeRemainingNextTrack;
-    
-    public Championship(string name, int year, Status status, List<TrackBase> tracks)
-    {
-        Name = $"{name} Championship";
-        Year = year;
-        Status = status;
-        Guid = Guid.NewGuid();
-        Tracks = tracks;
-    }
 
+    /// <summary>
+    /// See if the Winner Guid from a championship matches a Driver Guid. If so, then assign a Driver object to the Winner field.
+    /// </summary>
+    public static void AssignChampionshipDriver()
+    {
+        foreach (var championship in DatabaseManager.Championships)
+        {
+            foreach (var driver in DatabaseManager.Drivers)
+            {
+                if (championship.WinnerGuid == driver.Guid)
+                {
+                    championship.Winner = driver;
+                }   
+            }
+        }
+    }
+    
     /// <summary>
     /// Loop through all the tracks and count which ones have been completed.
     /// </summary>
