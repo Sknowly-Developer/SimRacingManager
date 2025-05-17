@@ -3,9 +3,11 @@
 @using SimRacingManager.Core
 @using SimRacingManager.Data
 
+@rendermode InteractiveServer
+
 <MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_newChampionship.Name</MudText>
 
-<MudTable Items="@_newChampionship.Drivers">
+<MudTable ServerData="ServerReload">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Drivers</MudText>
     </ToolBarContent>
@@ -19,8 +21,14 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Driver No.">@context.Number</MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Name">@context.Name @context.Surname</MudTd>
     </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No records found...</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Fetching data...</MudText>
+    </LoadingContent>
 </MudTable>
 
 <br/>
@@ -64,6 +72,9 @@
     
     protected override void OnInitialized()
     {
+        var testing = new DatabaseStuff();
+        testing.Initialise();
+        
         foreach (var championship in Championships.ChampionshipsList)
         {
             if (championship.Guid == ChampionshipGuid)
@@ -76,5 +87,21 @@
         {
             tracks.SetStatusColour(); // Probably not the best place to do this, but it should do for now.
         }
+    }
+
+    private async Task<TableData<Driver>> ServerReload(TableState state, CancellationToken token)
+    {
+        // This is a hacky workaround for now, I need to do more research on async and await methods.
+        await Task.Delay(1000);
+
+        _newChampionship.Drivers = DatabaseStuff.Drivers;
+        
+        var data = _newChampionship.Drivers;
+
+        var totalItems = data.Count;
+
+        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Driver> { TotalItems = totalItems, Items = pagedData };
     }
 }

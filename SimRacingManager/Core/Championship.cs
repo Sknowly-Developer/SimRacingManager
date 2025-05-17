@@ -19,13 +19,12 @@ public class Championship
     public int TracksCompleted;
     public string TimeRemainingNextTrack;
     
-    public Championship(string name, int year, Status status, List<Driver> drivers, List<TrackBase> tracks, Driver winner = null)
+    public Championship(string name, int year, Status status, List<TrackBase> tracks, Driver winner = null)
     {
         Name = $"{name} Championship";
         Year = year;
         Status = status;
         Guid = Guid.NewGuid();
-        Drivers = drivers;
         Tracks = tracks;
         Winner = winner;
     }

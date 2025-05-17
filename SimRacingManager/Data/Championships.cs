@@ -8,13 +8,6 @@ public static class Championships
 {
     private static Championship Y2025Q1 = new("Quarter 1", 2025, Status.Completed,
         [
-            Drivers.Adam, 
-            Drivers.Damien, 
-            Drivers.Harvey, 
-            Drivers.Lee, 
-            Drivers.Matthew, 
-            Drivers.Trent],
-        [
             new BrandsHatch(new DateTime(2025, 2, 5), Drivers.Harvey),
             new DoningtonPark(new DateTime(2025, 2, 12), Drivers.Trent),
             new OultonPark(new DateTime(2025, 2, 19), Drivers.Trent),
@@ -26,13 +19,6 @@ public static class Championships
         Drivers.Trent);
 
     private static Championship Y2025Q2 = new("Quarter 2", 2025, Status.Ongoing,
-        [
-            Drivers.Adam, 
-            Drivers.Damien, 
-            Drivers.Harvey, 
-            Drivers.Lee, 
-            Drivers.Matthew, 
-            Drivers.Trent],
         [
             new RoadAmerica(new DateTime(2025, 4, 16), Drivers.Trent),
             new WatkinsGlen(new DateTime(2025, 4, 23), Drivers.Harvey),

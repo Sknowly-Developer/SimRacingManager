@@ -1,13 +1,20 @@
-﻿namespace SimRacingManager.Core;
+﻿using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
-public class Driver
+namespace SimRacingManager.Core;
+
+[Table("drivers")]
+public class Driver : BaseModel
 {
-    public string Name;
-    public int Number;
+    [PrimaryKey("uuid")]
+    public Guid guid { get; set; }
+    
+    [Column("name")]
+    public string Name { get; set; }
 
-    public Driver(string name, int number)
-    {
-        Name = name;
-        Number = number;
-    }
+    [Column("surname")]
+    public string Surname { get; set; }
+    
+    [Column("number")]
+    public int Number { get; set; }
 }
