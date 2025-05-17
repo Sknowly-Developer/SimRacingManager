@@ -47,7 +47,7 @@
         }
         else
         {
-            <MudTd DataLabel="Winner">@context.Winner.Name</MudTd>
+            <MudTd DataLabel="Winner">@context.Winner.Name @context.Winner.Surname</MudTd>
         }
         <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>

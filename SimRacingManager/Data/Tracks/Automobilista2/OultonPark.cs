@@ -5,7 +5,7 @@ namespace SimRacingManager.Data.Tracks.Automobilista2;
 
 public class OultonPark : TrackBase
 {
-    public OultonPark(DateTime date, Driver? winner = null, string name = null) : base(date, winner, name)
+    public OultonPark(DateTime date, string name = null) : base(date, name)
     {
         Name = "Oulton Park";
     }

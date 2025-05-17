@@ -95,7 +95,7 @@
     private async Task<TableData<Driver>> FetchDrivers(TableState state, CancellationToken token)
     {
         // I have to fetch the data for each driver here, if I try to use a Task method to return a List of drivers then nothing happens.
-        var dataResult = await DatabaseManager.SupabaseClient.From<Driver>().Get(); 
+        var dataResult = await DatabaseManager.SupabaseClient.From<Driver>().Get();
         
         var totalItems = dataResult.Models.Count;
 

@@ -8,7 +8,7 @@ public class Championship
     public string Name;
     public TrackBase? Next;
     public string CombinedDates;
-    public Driver Winner;
+    public Driver? Winner;
     public Status Status;
     
     public List<Driver> Drivers;
@@ -19,14 +19,13 @@ public class Championship
     public int TracksCompleted;
     public string TimeRemainingNextTrack;
     
-    public Championship(string name, int year, Status status, List<TrackBase> tracks, Driver winner = null)
+    public Championship(string name, int year, Status status, List<TrackBase> tracks)
     {
         Name = $"{name} Championship";
         Year = year;
         Status = status;
         Guid = Guid.NewGuid();
         Tracks = tracks;
-        Winner = winner;
     }
 
     /// <summary>

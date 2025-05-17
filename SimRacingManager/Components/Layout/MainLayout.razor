@@ -1,4 +1,5 @@
 ﻿@using SimRacingManager.Core
+@using SimRacingManager.Data
 @inherits LayoutComponentBase
 
 @* Required *@
@@ -11,7 +12,7 @@
 <MudLayout>
     <MudAppBar>
         <MudNavLink Href="/" Style="width: 17%">
-            <MudBadge Content="_currentVersion" Overlap="true" Class="mx-6 my-4">
+            <MudBadge Content="CurrentVersion" Overlap="true" Class="mx-6 my-4">
                 <MudText Typo="Typo.h5">
                     Sim Racing Manager
                 </MudText>
@@ -35,10 +36,23 @@
 
 @code {
     private DateTime _currentDate = DateTime.Today;
-    private string _currentVersion = "PRE-ALPHA";
+    private const string CurrentVersion = "PRE-ALPHA";
 
     protected override void OnInitialized()
     {
-        DatabaseManager.Initialise();
+        // Everything within this conditional shouldn't be called more than once.
+        if (!Globals.HasDatabaseManagerBeenInitialised)
+        {
+            DatabaseManager.Initialise();
+            test();
+        }
+
+        Globals.HasDatabaseManagerBeenInitialised = true;
+    }
+
+    private async void test()
+    {
+        var dataResult = await DatabaseManager.SupabaseClient.From<Driver>().Get();
+        Championships.Y2025Q1.Winner = dataResult.Models.Find(driver => driver.Name.Contains("Trent"));
     }
 }
