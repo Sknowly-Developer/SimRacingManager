@@ -38,14 +38,14 @@ public class DatabaseManager
     /// </summary>
     public static void FetchAllData()
     {
-        FetchChampionships();
-        FetchDrivers();
+        FetchChampionshipsTable();
+        FetchDriversTable();
     }
     
     /// <summary>
     /// Queries all data from the Championships table.
     /// </summary>
-    private static async void FetchChampionships()
+    private static async void FetchChampionshipsTable()
     {
         try
         {
@@ -65,7 +65,7 @@ public class DatabaseManager
     /// <summary>
     /// Queries all data from the Drivers table.
     /// </summary>
-    private static async void FetchDrivers()
+    private static async void FetchDriversTable()
     {
         try
         {

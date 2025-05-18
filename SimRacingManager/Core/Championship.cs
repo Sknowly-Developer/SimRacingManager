@@ -20,13 +20,15 @@ public class Championship : BaseModel
     public Guid? WinnerGuid { get; set; }
     public Driver? Winner;
     
+    [Column("drivers")]
+    public Guid[]? DriversGuid { get; set; }
+    public List<Driver> Drivers = [];
     
-    
+    //
     
     public TrackBase? Next;
     public string CombinedDates;
     public Status Status;
-    public List<Driver> Drivers;
     public List<TrackBase> Tracks;
     public MudBlazor.Color StatusColour;
     public int TracksCompleted;
@@ -35,7 +37,7 @@ public class Championship : BaseModel
     /// <summary>
     /// See if the Winner Guid from a championship matches a Driver Guid. If so, then assign a Driver object to the Winner field.
     /// </summary>
-    public static void AssignChampionshipDriver()
+    public static void AssignChampionshipWinner()
     {
         foreach (var championship in DatabaseManager.Championships)
         {
@@ -45,6 +47,31 @@ public class Championship : BaseModel
                 {
                     championship.Winner = driver;
                 }   
+            }
+        }
+    }
+
+    /// <summary>
+    /// Check to see if there are any Driver Guids in the drivers column of the database. If there are, then loop through every driver and check if their Guids match. If so, then add that Driver object to the Drivers list.
+    /// </summary>
+    public static void AssignChampionshipDrivers()
+    {
+        foreach (var championship in DatabaseManager.Championships)
+        {
+            championship.Drivers.Clear(); // This method is called multiple times, clear the list each time to prevent duplicates.
+            
+            if (championship.DriversGuid != null)
+            {
+                foreach (var driverGuid in championship.DriversGuid)
+                {
+                    foreach (var driver in DatabaseManager.Drivers)
+                    {
+                        if (driverGuid == driver.Guid)
+                        {
+                            championship.Drivers.Add(driver);
+                        }
+                    }
+                }
             }
         }
     }
