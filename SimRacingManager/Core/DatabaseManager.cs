@@ -27,9 +27,9 @@ public class DatabaseManager
             SupabaseClient = new Client(Url, Key, options);
             await SupabaseClient.InitializeAsync();
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            Console.WriteLine(exception);
+            Console.WriteLine($"Unable to establish a connection to the database. Exception: {e}");
         }
     }
 
@@ -56,9 +56,9 @@ public class DatabaseManager
                 Championships.Add(championship);
             }
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            Console.WriteLine(exception);
+            Console.WriteLine($"Unable to fetch championships. Exception: {e}");
         }
     }
     
@@ -76,9 +76,9 @@ public class DatabaseManager
                 Drivers.Add(driver);
             }
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            Console.WriteLine(exception);
+            Console.WriteLine($"Unable to fetch drivers. Exception: {e}");
         }
     }
 }
