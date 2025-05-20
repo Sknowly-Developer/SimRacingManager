@@ -24,12 +24,15 @@ public class Championship : BaseModel
     public Guid[]? DriversGuid { get; set; }
     public List<Driver> Drivers = [];
     
+    [Column("tracks")]
+    public Guid[]? TracksGuid { get; set; }
+    public List<TrackBase> Tracks = [];
+    
     //
     
     public TrackBase? Next;
     public string CombinedDates;
     public Status Status;
-    public List<TrackBase> Tracks;
     public MudBlazor.Color StatusColour;
     public int TracksCompleted;
     public string TimeRemainingNextTrack;
@@ -37,7 +40,7 @@ public class Championship : BaseModel
     /// <summary>
     /// See if the Winner Guid from a championship matches a Driver Guid. If so, then assign a Driver object to the Winner field.
     /// </summary>
-    public static void AssignChampionshipWinner()
+    public static void AssignWinner()
     {
         foreach (var championship in DatabaseManager.Championships)
         {
@@ -54,7 +57,7 @@ public class Championship : BaseModel
     /// <summary>
     /// Check to see if there are any Driver Guids in the drivers column of the database. If there are, then loop through every driver and check if their Guids match. If so, then add that Driver object to the Drivers list.
     /// </summary>
-    public static void AssignChampionshipDrivers()
+    public static void AssignDrivers()
     {
         foreach (var championship in DatabaseManager.Championships)
         {
@@ -69,6 +72,32 @@ public class Championship : BaseModel
                         if (driverGuid == driver.Guid)
                         {
                             championship.Drivers.Add(driver);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checking to see if there are any track guids in the database that match the ones assigned to the array of track guids in a championship.
+    /// If they match, add a TrackBase reference of it to a List of tracks.
+    /// </summary>
+    public static void AssignTracks()
+    {
+        foreach (var championship in DatabaseManager.Championships)
+        {
+            championship.Tracks.Clear();
+
+            if (championship.TracksGuid != null)
+            {
+                foreach (var trackGuid in championship.TracksGuid)
+                {
+                    foreach (var track in DatabaseManager.Tracks)
+                    {
+                        if (trackGuid == track.Guid)
+                        {
+                            championship.Tracks.Add(track);
                         }
                     }
                 }

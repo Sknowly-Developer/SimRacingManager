@@ -40,13 +40,13 @@
         <col />
         <col />
         <col />
-        <col style="width: 1%" />
+        @*<col style="width: 1%" />*@
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Date</MudTh>
         <MudTh>Winner</MudTh>
-        <MudTh Style="text-align: center">Status</MudTh>
+        @*<MudTh Style="text-align: center">Status</MudTh>*@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -59,7 +59,7 @@
         {
             <MudTd DataLabel="Winner"></MudTd>
         }
-        <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
+        @*<MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>*@
     </RowTemplate>
 </MudTable>
 
@@ -78,28 +78,10 @@
                 _newChampionship = championship;
             }
         }
-
+        
         /*foreach (var tracks in _newChampionship.Tracks)
         {
             tracks.SetStatusColour(); // Probably not the best place to do this, but it should do for now.
         }*/
-    }
-
-    /// <summary>
-    /// Fetches all drivers from the database.
-    /// </summary>
-    /// <param name="state"></param>
-    /// <param name="token"></param>
-    /// <returns>A TableData of the Driver class for each Driver object.</returns>
-    private async Task<TableData<Driver>> FetchDrivers(TableState state, CancellationToken token)
-    {
-        // I have to fetch the data for each driver here, if I try to use a Task method to return a List of drivers then nothing happens.
-        var dataResult = await DatabaseManager.SupabaseClient.From<Driver>().Get();
-        
-        var totalItems = dataResult.Models.Count;
-
-        var pagedData = dataResult.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
-
-        return new TableData<Driver> { TotalItems = totalItems, Items = pagedData };
     }
 }

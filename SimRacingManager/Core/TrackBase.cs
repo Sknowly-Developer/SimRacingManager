@@ -1,23 +1,46 @@
 ﻿using MudBlazor;
 using SimRacingManager.Enumerations;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 
 namespace SimRacingManager.Core;
 
-public abstract class TrackBase
+[Table("tracks")]
+public class TrackBase : BaseModel
 {
-    public string Name;
-    public DateTime Date;
+    [PrimaryKey("uuid")]
+    public Guid Guid { get; set; }
+    
+    [Column("name")]
+    public string Name { get; set; }
+    
+    [Column("date")]
+    public DateTime Date { get; set; }
+    
+    [Column("winner")]
+    public Guid? WinnerGuid { get; set; }
     public Driver? Winner;
-    public Status Status = Status.Upcoming;
+    
+    //
+    
+    public Status Status;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = new();
 
-    protected TrackBase(DateTime date, string name = null)
+    public static void AssignmentTrackWinner()
     {
-        Date = date;
-        Name = name;
+        foreach (var track in DatabaseManager.Tracks)
+        {
+            foreach (var driver in DatabaseManager.Drivers)
+            {
+                if (track.WinnerGuid == driver.Guid)
+                {
+                    track.Winner = driver;
+                }
+            }
+        }
     }
-
+    
     public void Initialize()
     {
         // Initialize gets called multiple times, clear the dictionary to avoid duplicate keys. 
