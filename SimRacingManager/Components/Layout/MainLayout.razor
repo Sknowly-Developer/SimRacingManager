@@ -45,12 +45,12 @@
         // Everything within this conditional shouldn't be called more than once.
         if (!Globals.HasDatabaseManagerBeenInitialised)
         {
-            var root = Directory.GetCurrentDirectory();
-            var dotenv = Path.Combine(root, "env.env");
-            DotEnv.Load(dotenv);
-
-            DatabaseManager.Initialise();
-            DatabaseManager.FetchAllData();
+            // If the .env file cannot be found, don't bother making a connection to the database.
+            if (DotEnv.SearchForEnvironmentFiles())
+            {
+                DatabaseManager.Initialise();
+                DatabaseManager.FetchAllData();   
+            }
         }
 
         Globals.HasDatabaseManagerBeenInitialised = true;

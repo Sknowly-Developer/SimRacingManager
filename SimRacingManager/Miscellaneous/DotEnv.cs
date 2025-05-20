@@ -2,7 +2,34 @@
 
 public static class DotEnv
 {
-    public static void Load(string filePath)
+    public static bool SearchForEnvironmentFiles()
+    {
+        var root = Directory.GetCurrentDirectory();
+        var envFiles = Directory.GetFiles(root, "*.env");
+        var envFileName = "";
+        
+        if (envFiles.Length == 0)
+        {
+            Console.WriteLine("No Environment file found.");
+            return false;
+        }
+        
+        if (envFiles.Length > 1)
+        {
+            Console.WriteLine("Unable load more than one Environment file!");
+            return false;
+        }
+
+        foreach (var envFile in envFiles)
+        {
+            envFileName = Path.GetFileName(envFile);
+        }
+        
+        LoadEnvironmentFile(Path.Combine(root, envFileName));
+        return true;
+    }
+    
+    private static void LoadEnvironmentFile(string filePath)
     {
         if (!File.Exists(filePath))
             return;
