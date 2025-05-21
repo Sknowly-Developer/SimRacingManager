@@ -27,16 +27,13 @@ public class Track : BaseModel
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = new();
 
-    public static void AssignmentTrackWinner()
+    public void AssignWinner()
     {
-        foreach (var track in DatabaseManager.Tracks)
+        foreach (var driver in DatabaseManager.Drivers)
         {
-            foreach (var driver in DatabaseManager.Drivers)
+            if (WinnerGuid == driver.Guid)
             {
-                if (track.WinnerGuid == driver.Guid)
-                {
-                    track.Winner = driver;
-                }
+                Winner = driver;
             }
         }
     }
@@ -52,6 +49,7 @@ public class Track : BaseModel
         _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
 
         SetStatus();
+        SetStatusColour();
     }
 
     /// <summary>
@@ -75,7 +73,7 @@ public class Track : BaseModel
     /// <summary>
     /// Set the StatusColour field to whatever Colour value that was returned from the Dictionary.
     /// </summary>
-    public void SetStatusColour()
+    private void SetStatusColour()
     {
         foreach (var colour in _statusColourDictionary)
         {

@@ -41,26 +41,26 @@
         <col />
         <col />
         <col />
-        @*<col style="width: 1%" />*@
+        <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Date</MudTh>
         <MudTh>Winner</MudTh>
-        @*<MudTh Style="text-align: center">Status</MudTh>*@
+        <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Date">@context.Date.ToShortDateString()</MudTd>
         @if (context.Winner != null)
         {
-            <MudTd DataLabel="Winner">@context.Winner.Name</MudTd>
+            <MudTd DataLabel="Winner">@context.Winner.Name @context.Winner.Surname</MudTd>
         }
         else
         {
             <MudTd DataLabel="Winner"></MudTd>
         }
-        @*<MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>*@
+        <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No records found...</MudText>
@@ -86,10 +86,10 @@
             }
         }
         
-        /*foreach (var tracks in _newChampionship.Tracks)
+        foreach (var tracks in _newChampionship.Tracks)
         {
-            tracks.SetStatusColour(); // Probably not the best place to do this, but it should do for now.
-        }*/
+            tracks.Initialize();
+        }
     }
 
     private async Task<TableData<Driver>> ServerReload(TableState state, CancellationToken token)
@@ -110,6 +110,11 @@
         var data = await DatabaseManager.SupabaseClient.From<Track>()
             .Filter(track => track.Guid, Constants.Operator.In, _newChampionship.TracksGuid)
             .Get();
+
+        foreach (var track in data.Models)
+        {
+            track.AssignWinner();
+        }
         
         var totalItems = data.Models.Count;
 
