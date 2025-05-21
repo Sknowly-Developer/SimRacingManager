@@ -10,7 +10,7 @@
 
 @* TODO: Add each year in dynamically as well *@
 @* TODO: Need to filter by Year again *@
-<MudTable Items="@DatabaseManager.Championships" Hover="true" RowClass="cursor-pointer" T="Championship" OnRowClick="RowClickEvent">
+<MudTable ServerData="ServerReload" Hover="true" RowClass="cursor-pointer" T="Championship" OnRowClick="RowClickEvent">
     <ToolBarContent>
         <MudText Typo="Typo.h6">2025 Season</MudText>
     </ToolBarContent>
@@ -66,13 +66,9 @@
 @code {
     private Dictionary<Status, Color> _statusColourDictionary = new();
 
-    protected override void OnInitialized()
+    /*protected override void OnInitialized()
     {
-        Championship.AssignWinner();
-        Championship.AssignDrivers();
-        Championship.AssignTracks();
-        
-        /*_statusColourDictionary.Clear();
+        _statusColourDictionary.Clear();
 
         _statusColourDictionary.Add(Status.Completed, Color.Error);
         _statusColourDictionary.Add(Status.Ongoing, Color.Success);
@@ -97,11 +93,24 @@
             }
 
             championship.NextRace();
-        }*/
-    }
+        }
+    }*/
 
     private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
     {
         Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item.Guid}");
+    }
+
+    private async Task<TableData<Championship>> ServerReload(TableState state, CancellationToken token)
+    {
+        var data = await DatabaseManager.SupabaseClient.From<Championship>().Get();
+
+        Championship.AssignWinner(data.Models);
+        
+        var totalItems = data.Models.Count;
+
+        var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Championship> { TotalItems = totalItems, Items = pagedData };
     }
 }

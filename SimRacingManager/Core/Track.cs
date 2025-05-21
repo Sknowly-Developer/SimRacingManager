@@ -6,7 +6,7 @@ using Supabase.Postgrest.Models;
 namespace SimRacingManager.Core;
 
 [Table("tracks")]
-public class TrackBase : BaseModel
+public class Track : BaseModel
 {
     [PrimaryKey("uuid")]
     public Guid Guid { get; set; }

@@ -11,7 +11,7 @@ public class DatabaseManager
     
     public static List<Championship> Championships = [];
     public static List<Driver> Drivers = [];
-    public static List<TrackBase> Tracks = [];
+    public static List<Track> Tracks = [];
     
     /// <summary>
     /// Opens a connection to the database then keeps a reference.
@@ -91,7 +91,7 @@ public class DatabaseManager
     {
         try
         {
-            var trackModels = await SupabaseClient.From<TrackBase>().Get();
+            var trackModels = await SupabaseClient.From<Track>().Get();
 
             foreach (var track in trackModels.Models)
             {

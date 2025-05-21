@@ -13,13 +13,11 @@
 
 <MudLayout>
     <MudAppBar>
-        <MudNavLink Href="/" Style="width: 20%">
-            <MudBadge Content="CurrentVersion" Overlap="true" Class="mx-6 my-4">
-                <MudText Typo="Typo.h5">
-                    Sim Racing Manager
-                </MudText>
-            </MudBadge>
-        </MudNavLink>
+        <MudBadge Content="CurrentVersion" Overlap="true" Class="mx-6 my-4">
+            <MudText Typo="Typo.h5">
+                Sim Racing Manager
+            </MudText>
+        </MudBadge>
         <MudSpacer/>
         <MudText Align="Align.End">@_currentDate.ToShortDateString()</MudText>
     </MudAppBar>
@@ -49,7 +47,7 @@
             if (DotEnv.SearchForEnvironmentFiles())
             {
                 DatabaseManager.Initialise();
-                DatabaseManager.FetchAllData();   
+                DatabaseManager.FetchAllData();
             }
         }
 

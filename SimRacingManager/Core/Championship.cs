@@ -26,11 +26,11 @@ public class Championship : BaseModel
     
     [Column("tracks")]
     public Guid[]? TracksGuid { get; set; }
-    public List<TrackBase> Tracks = [];
+    public List<Track> Tracks = [];
     
     //
     
-    public TrackBase? Next;
+    public Track? Next;
     public string CombinedDates;
     public Status Status;
     public MudBlazor.Color StatusColour;
@@ -40,9 +40,9 @@ public class Championship : BaseModel
     /// <summary>
     /// See if the Winner Guid from a championship matches a Driver Guid. If so, then assign a Driver object to the Winner field.
     /// </summary>
-    public static void AssignWinner()
+    public static void AssignWinner(List<Championship> championships)
     {
-        foreach (var championship in DatabaseManager.Championships)
+        foreach (var championship in championships)
         {
             foreach (var driver in DatabaseManager.Drivers)
             {

@@ -1,12 +1,13 @@
 ﻿@page "/ChampionshipDetails/{ChampionshipGuid:guid}"
 
 @using SimRacingManager.Core
+@using Supabase.Postgrest
 
 @rendermode InteractiveServer
 
 <MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_newChampionship.Name</MudText>
 
-<MudTable Items="_newChampionship.Drivers">
+<MudTable ServerData="ServerReload">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Drivers</MudText>
     </ToolBarContent>
@@ -32,7 +33,7 @@
 
 <br/>
 
-<MudTable Items="@_newChampionship.Tracks">
+<MudTable ServerData="ServerReload2">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Tracks</MudText>
     </ToolBarContent>
@@ -61,6 +62,12 @@
         }
         @*<MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>*@
     </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No records found...</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Fetching data...</MudText>
+    </LoadingContent>
 </MudTable>
 
 @code {
@@ -83,5 +90,31 @@
         {
             tracks.SetStatusColour(); // Probably not the best place to do this, but it should do for now.
         }*/
+    }
+
+    private async Task<TableData<Driver>> ServerReload(TableState state, CancellationToken token)
+    {
+        var data = await DatabaseManager.SupabaseClient.From<Driver>()
+            .Filter(driver => driver.Guid, Constants.Operator.In, _newChampionship.DriversGuid)
+            .Get();
+        
+        var totalItems = data.Models.Count;
+
+        var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Driver> { TotalItems = totalItems, Items = pagedData };
+    }
+    
+    private async Task<TableData<Track>> ServerReload2(TableState state, CancellationToken token)
+    {
+        var data = await DatabaseManager.SupabaseClient.From<Track>()
+            .Filter(track => track.Guid, Constants.Operator.In, _newChampionship.TracksGuid)
+            .Get();
+        
+        var totalItems = data.Models.Count;
+
+        var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Track> { TotalItems = totalItems, Items = pagedData };
     }
 }
