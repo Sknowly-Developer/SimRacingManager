@@ -7,7 +7,7 @@
 
 <MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_championshipInstance.Name</MudText>
 
-<MudTable ServerData="ServerReload">
+<MudTable ServerData="FetchDriversFromChampionship">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Drivers</MudText>
     </ToolBarContent>
@@ -33,7 +33,7 @@
 
 <br/>
 
-<MudTable ServerData="ServerReload2">
+<MudTable ServerData="FetchTracksFromChampionship">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Tracks</MudText>
     </ToolBarContent>
@@ -87,11 +87,16 @@
         }
     }
 
-    private async Task<TableData<Driver>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<Driver>> FetchDriversFromChampionship(TableState state, CancellationToken token)
     {
         var data = await DatabaseManager.SupabaseClient.From<Driver>()
             .Filter(driver => driver.Guid, Constants.Operator.In, _championshipInstance.DriversGuid)
             .Get();
+
+        foreach (var driver in data.Models)
+        {
+            _championshipInstance.Drivers.Add(driver);
+        }
         
         var totalItems = data.Models.Count;
 
@@ -100,7 +105,7 @@
         return new TableData<Driver> { TotalItems = totalItems, Items = pagedData };
     }
     
-    private async Task<TableData<Track>> ServerReload2(TableState state, CancellationToken token)
+    private async Task<TableData<Track>> FetchTracksFromChampionship(TableState state, CancellationToken token)
     {
         var data = await DatabaseManager.SupabaseClient.From<Track>()
             .Filter(track => track.Guid, Constants.Operator.In, _championshipInstance.TracksGuid)

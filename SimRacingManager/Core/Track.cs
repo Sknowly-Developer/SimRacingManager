@@ -25,7 +25,7 @@ public class Track : BaseModel
     
     public Status Status;
     public Color StatusColour;
-    private Dictionary<Status, Color> _statusColourDictionary = new();
+    private Dictionary<Status, Color> _statusColourDictionary = [];
 
     public void AssignWinner()
     {
@@ -57,9 +57,9 @@ public class Track : BaseModel
     /// </summary>
     private void SetStatus()
     {
-        var test = DateTime.Compare(Date, DateTime.Today);
+        var dateComparison = DateTime.Compare(Date, DateTime.Today);
         
-        switch (test)
+        switch (dateComparison)
         {
             case <0:
                 Status = Status.Completed;
@@ -73,7 +73,7 @@ public class Track : BaseModel
     /// <summary>
     /// Set the StatusColour field to whatever Colour value that was returned from the Dictionary.
     /// </summary>
-    private void SetStatusColour()
+    public void SetStatusColour()
     {
         foreach (var colour in _statusColourDictionary)
         {

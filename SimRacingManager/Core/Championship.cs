@@ -1,4 +1,5 @@
-﻿using SimRacingManager.Enumerations;
+﻿using MudBlazor;
+using SimRacingManager.Enumerations;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
@@ -32,11 +33,38 @@ public class Championship : BaseModel
     
     public Track? Next;
     public string CombinedDates;
-    public Status Status;
-    public MudBlazor.Color StatusColour;
+    private List<DateTime> _trackDates = [];
+    public Status Status; // TODO: Need to create a method to automatically set this
+    public Color StatusColour;
+    private Dictionary<Status, Color> _statusColourDictionary = [];
     public int TracksCompleted;
     public string TimeRemainingNextTrack;
 
+    public void Initialise()
+    {
+        _statusColourDictionary.Clear();
+
+        _statusColourDictionary.Add(Status.Completed, Color.Error);
+        _statusColourDictionary.Add(Status.Ongoing, Color.Success);
+        _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
+
+        SetStatusColour();
+    }
+    
+    /// <summary>
+    /// Set the StatusColour field to whatever Colour value that was returned from the Dictionary.
+    /// </summary>
+    private void SetStatusColour()
+    {
+        foreach (var colour in _statusColourDictionary)
+        {
+            if (colour.Key == Status)
+            {
+                StatusColour = colour.Value;   
+            }
+        }
+    }
+    
     /// <summary>
     /// See if the Winner Guid from a championship matches a Driver Guid. If so, then assign a Driver object to the Winner field.
     /// </summary>
@@ -50,57 +78,6 @@ public class Championship : BaseModel
                 {
                     championship.Winner = driver;
                 }   
-            }
-        }
-    }
-
-    /// <summary>
-    /// Check to see if there are any Driver Guids in the drivers column of the database. If there are, then loop through every driver and check if their Guids match. If so, then add that Driver object to the Drivers list.
-    /// </summary>
-    public static void AssignDrivers()
-    {
-        foreach (var championship in DatabaseManager.Championships)
-        {
-            championship.Drivers.Clear(); // This method is called multiple times, clear the list each time to prevent duplicates.
-            
-            if (championship.DriversGuid != null)
-            {
-                foreach (var driverGuid in championship.DriversGuid)
-                {
-                    foreach (var driver in DatabaseManager.Drivers)
-                    {
-                        if (driverGuid == driver.Guid)
-                        {
-                            championship.Drivers.Add(driver);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Checking to see if there are any track guids in the database that match the ones assigned to the array of track guids in a championship.
-    /// If they match, add a TrackBase reference of it to a List of tracks.
-    /// </summary>
-    public static void AssignTracks()
-    {
-        foreach (var championship in DatabaseManager.Championships)
-        {
-            championship.Tracks.Clear();
-
-            if (championship.TracksGuid != null)
-            {
-                foreach (var trackGuid in championship.TracksGuid)
-                {
-                    foreach (var track in DatabaseManager.Tracks)
-                    {
-                        if (trackGuid == track.Guid)
-                        {
-                            championship.Tracks.Add(track);
-                        }
-                    }
-                }
             }
         }
     }
@@ -129,14 +106,12 @@ public class Championship : BaseModel
     /// </summary>
     public void CombineDates()
     {
-        List<DateTime> trackDates = new();
-        
         foreach (var track in Tracks)
         {
-            trackDates.Add(track.Date);
+            _trackDates.Add(track.Date);
         }
         
-        CombinedDates = $"{trackDates[0].Date.ToShortDateString()} to {trackDates[trackDates.Count - 1].Date.ToShortDateString()}";
+        CombinedDates = $"{_trackDates[0].Date.ToShortDateString()} to {_trackDates[_trackDates.Count - 1].Date.ToShortDateString()}";
     }
 
     /// <summary>
@@ -144,7 +119,7 @@ public class Championship : BaseModel
     /// </summary>
     public void NextRace()
     {
-        List<int> testingList = new();
+        List<int> testingList = [];
         
         foreach (var track in Tracks)
         {
@@ -170,6 +145,7 @@ public class Championship : BaseModel
             {
                 track.Status = Status.Next;
                 Next = track;
+                // track.SetStatusColour();
             }
         }
         

@@ -3,6 +3,7 @@
 @using SimRacingManager.Core
 @using SimRacingManager.Data
 @using SimRacingManager.Enumerations
+@using Supabase.Postgrest
 
 @inject NavigationManager Navigation
 
@@ -10,7 +11,7 @@
 
 @* TODO: Add each year in dynamically as well *@
 @* TODO: Need to filter by Year again *@
-<MudTable ServerData="ServerReload" Hover="true" RowClass="cursor-pointer" T="Championship" OnRowClick="RowClickEvent">
+<MudTable ServerData="FetchChampionships" Hover="true" RowClass="cursor-pointer" T="Championship" OnRowClick="RowClickEvent">
     <ToolBarContent>
         <MudText Typo="Typo.h6">2025 Season</MudText>
     </ToolBarContent>
@@ -18,24 +19,24 @@
         <col />
         <col />
         <col />
-        @*<col />
         <col />
         <col />
-        <col style="width: 1%" />*@
+        <col />
+        <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Year</MudTh>
-        @*<MudTh>Next</MudTh>
+        <MudTh>Next</MudTh>
         <MudTh>Races</MudTh>
-        <MudTh>Period</MudTh>*@
+        <MudTh>Period</MudTh>
         <MudTh>Winner</MudTh>
-        @*<MudTh Style="text-align: center">Status</MudTh>*@
+        <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Year">@context.Year</MudTd>
-        @*@if (context.Next == null)
+        @if (context.Next == null)
         {
             <MudTd DataLabel="Next"></MudTd>
         }
@@ -44,7 +45,7 @@
             <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="Color.Primary">@context.TimeRemainingNextTrack Days</MudChip></MudTd>
         }
         <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
-        <MudTd DataLabel="Period">@context.CombinedDates</MudTd>*@
+        <MudTd DataLabel="Period">@context.CombinedDates</MudTd>
         @if (context.Winner == null)
         {
             <MudTd DataLabel="Winner"></MudTd>
@@ -53,7 +54,7 @@
         {
             <MudTd DataLabel="Winner">@context.Winner.Name @context.Winner.Surname</MudTd>
         }
-        @*<MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>*@
+        <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No records found...</MudText>
@@ -64,52 +65,39 @@
 </MudTable>
 
 @code {
-    private Dictionary<Status, Color> _statusColourDictionary = new();
-
-    /*protected override void OnInitialized()
-    {
-        _statusColourDictionary.Clear();
-
-        _statusColourDictionary.Add(Status.Completed, Color.Error);
-        _statusColourDictionary.Add(Status.Ongoing, Color.Success);
-        _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
-
-        foreach (var championship in _championships)
-        {
-            championship.TracksCompletedCount();
-            championship.CombineDates();
-
-            foreach (var colour in _statusColourDictionary)
-            {
-                if (colour.Key == championship.Status)
-                {
-                    championship.StatusColour = colour.Value;
-                }
-            }
-
-            foreach (var track in championship.Tracks)
-            {
-                track.Initialize();
-            }
-
-            championship.NextRace();
-        }
-    }*/
-
     private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
     {
         Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item.Guid}");
     }
 
-    private async Task<TableData<Championship>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<Championship>> FetchChampionships(TableState state, CancellationToken token)
     {
-        var data = await DatabaseManager.SupabaseClient.From<Championship>().Get();
+        var championshipModels = await DatabaseManager.SupabaseClient.From<Championship>().Get();
 
-        Championship.AssignWinner(data.Models);
+        foreach (var championship in championshipModels.Models)
+        {
+            var trackModels = await DatabaseManager.SupabaseClient.From<Track>()
+                .Filter(track => track.Guid, Constants.Operator.In, championship.TracksGuid)
+                .Get();
+
+            foreach (var track in trackModels.Models)
+            {
+                championship.Tracks.Add(track);
+                track.Initialize();
+                track.AssignWinner();
+            }
+            
+            championship.Initialise();
+            championship.NextRace();
+            championship.TracksCompletedCount();
+            championship.CombineDates();
+        }
         
-        var totalItems = data.Models.Count;
+        Championship.AssignWinner(championshipModels.Models);
+        
+        var totalItems = championshipModels.Models.Count;
 
-        var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+        var pagedData = championshipModels.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
 
         return new TableData<Championship> { TotalItems = totalItems, Items = pagedData };
     }
