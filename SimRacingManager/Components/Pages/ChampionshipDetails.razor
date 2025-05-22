@@ -5,7 +5,7 @@
 
 @rendermode InteractiveServer
 
-<MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_newChampionship.Name</MudText>
+<MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_championshipInstance.Name</MudText>
 
 <MudTable ServerData="ServerReload">
     <ToolBarContent>
@@ -74,7 +74,7 @@
     [Parameter]
     public Guid ChampionshipGuid { get; set; }
     
-    private Championship _newChampionship; // Doesn't matter if this is null, it should always be assigned an instance.
+    private Championship _championshipInstance; // Doesn't matter if this is null, it should always be assigned an instance.
     
     protected override void OnInitialized()
     {
@@ -82,20 +82,15 @@
         {
             if (championship.Guid == ChampionshipGuid)
             {
-                _newChampionship = championship;
+                _championshipInstance = championship;
             }
-        }
-        
-        foreach (var tracks in _newChampionship.Tracks)
-        {
-            tracks.Initialize();
         }
     }
 
     private async Task<TableData<Driver>> ServerReload(TableState state, CancellationToken token)
     {
         var data = await DatabaseManager.SupabaseClient.From<Driver>()
-            .Filter(driver => driver.Guid, Constants.Operator.In, _newChampionship.DriversGuid)
+            .Filter(driver => driver.Guid, Constants.Operator.In, _championshipInstance.DriversGuid)
             .Get();
         
         var totalItems = data.Models.Count;
@@ -108,11 +103,12 @@
     private async Task<TableData<Track>> ServerReload2(TableState state, CancellationToken token)
     {
         var data = await DatabaseManager.SupabaseClient.From<Track>()
-            .Filter(track => track.Guid, Constants.Operator.In, _newChampionship.TracksGuid)
+            .Filter(track => track.Guid, Constants.Operator.In, _championshipInstance.TracksGuid)
             .Get();
 
         foreach (var track in data.Models)
         {
+            track.Initialize();
             track.AssignWinner();
         }
         
