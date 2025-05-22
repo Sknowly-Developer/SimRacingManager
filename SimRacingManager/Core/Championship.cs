@@ -145,7 +145,6 @@ public class Championship : BaseModel
             {
                 track.Status = Status.Next;
                 Next = track;
-                // track.SetStatusColour();
             }
         }
         

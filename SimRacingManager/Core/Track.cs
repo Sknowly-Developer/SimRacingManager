@@ -23,7 +23,7 @@ public class Track : BaseModel
     
     //
     
-    public Status Status;
+    public Status Status = Status.Next;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
 
@@ -73,7 +73,7 @@ public class Track : BaseModel
     /// <summary>
     /// Set the StatusColour field to whatever Colour value that was returned from the Dictionary.
     /// </summary>
-    public void SetStatusColour()
+    private void SetStatusColour()
     {
         foreach (var colour in _statusColourDictionary)
         {
