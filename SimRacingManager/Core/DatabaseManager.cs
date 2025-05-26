@@ -12,6 +12,7 @@ public class DatabaseManager
     public static List<Championship> Championships = [];
     public static List<Driver> Drivers = [];
     public static List<Track> Tracks = [];
+    public static List<Results> Results = [];
     
     /// <summary>
     /// Opens a connection to the database then keeps a reference.
@@ -42,6 +43,7 @@ public class DatabaseManager
         FetchChampionshipsTable();
         FetchDriversTable();
         FetchTracksTable();
+        FetchResultsTable();
     }
     
     /// <summary>
@@ -101,6 +103,26 @@ public class DatabaseManager
         catch (Exception e)
         {
             Console.WriteLine($"Unable to fetch tracks. Exception: {e}");
+        }
+    }
+    
+    /// <summary>
+    /// Queries all data from the Results table.
+    /// </summary>
+    private static async void FetchResultsTable()
+    {
+        try
+        {
+            var resultsModels = await SupabaseClient.From<Results>().Get();
+
+            foreach (var result in resultsModels.Models)
+            {
+                Results.Add(result);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Unable to fetch results. Exception: {e}");
         }
     }
 }
