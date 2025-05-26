@@ -47,4 +47,25 @@ public class Results : BaseModel
     
     [Column("12th")]
     public Guid? Twelfth { get; set; }
+
+    private Dictionary<string, int> _positionPoints = new()
+    {
+        { "First", 6 },
+        { "Second", 5 },
+        { "Third", 4 },
+        { "Fourth", 3 },
+        { "Fifth", 2 },
+        { "Sixth", 1 }
+    };
+
+    public void AssignPointsToDrivers()
+    {
+        foreach (var point in _positionPoints)
+        {
+            if (point.Key.Equals(nameof(First)))
+            {
+                Console.WriteLine(point.Value);
+            }
+        }
+    }
 }
