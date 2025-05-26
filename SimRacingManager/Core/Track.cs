@@ -21,6 +21,9 @@ public class Track : BaseModel
     public Guid? WinnerGuid { get; set; }
     public Driver? Winner;
     
+    [Column("positions")]
+    public string PositionsJson { get; set; }
+    
     //
     
     public Status Status = Status.Next;

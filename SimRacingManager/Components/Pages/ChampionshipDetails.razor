@@ -16,12 +16,14 @@
         <col />
     </ColGroup>
     <HeaderContent>
-        <MudTh>Driver No.</MudTh>
+        <MudTh>Position</MudTh>
         <MudTh>Name</MudTh>
+        <MudTh>Points</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Driver No.">@context.Number</MudTd>
-        <MudTd DataLabel="Name">@context.Name @context.Surname</MudTd>
+        <MudTd DataLabel="Position"></MudTd>
+        <MudTd DataLabel="Name">[@context.Number] @context.Name @context.Surname</MudTd>
+        <MudTd DataLabel="Points"></MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No records found...</MudText>
