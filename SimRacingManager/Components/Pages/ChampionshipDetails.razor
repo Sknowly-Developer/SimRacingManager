@@ -90,7 +90,7 @@
 
     private void RowClickEvent(TableRowClickEventArgs<Track> tableRowClickEventArgs)
     {
-        Navigation.NavigateTo($"TrackResultsDetails/{tableRowClickEventArgs.Item.Result}");
+        Navigation.NavigateTo($"TrackDetails/{tableRowClickEventArgs.Item.Guid}");
     }
 
     private async Task<TableData<Driver>> FetchDriversFromChampionship(TableState state, CancellationToken token)

@@ -9,22 +9,27 @@ public class Results : BaseModel
     [PrimaryKey("uuid")]
     public Guid Guid { get; set; }
     
-    [Column("track")]
-    public Guid TrackGuid { get; set; }
+    [Column("position")]
+    public int Position { get; set; }
     
-    [Column("positions")]
-    public Guid[]? PositionsGuid { get; set; }
-    public List<Driver> Positions = [];
+    [Column("driver")]
+    public Guid DriverGuid { get; set; }
+    public Driver Driver;
     
     [Column("points")]
-    public int[]? Points { get; set; }
+    public int Points { get; set; }
     
     [Column("fastest_lap")]
-    public Guid FastestLap { get; set; }
-
-    [Column("dnf")]
-    public Guid[]? DidNotFinishes { get; set; }
+    public bool FastestLap { get; set; }
     
-    [Column("reached_points")]
-    public Guid[]? ReachedPoints { get; set; }
+    public void AssignDriver()
+    {
+        foreach (var driver in DatabaseManager.Drivers)
+        {
+            if (driver.Guid == DriverGuid)
+            {
+                Driver = driver;
+            }   
+        }
+    }
 }

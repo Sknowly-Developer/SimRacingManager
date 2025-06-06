@@ -1,0 +1,88 @@
+﻿@page "/TrackDetails/{TrackGuid:guid}"
+
+@using SimRacingManager.Core
+@using Supabase.Postgrest
+
+@rendermode InteractiveServer
+
+<MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_trackInstance.Name</MudText>
+
+<MudTable ServerData="FetchResultsFromTrack">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Results</MudText>
+    </ToolBarContent>
+    <ColGroup>
+        <col />
+        <col />
+        <col />
+        <col />
+    </ColGroup>
+    <HeaderContent>
+        <MudTh>Position</MudTh>
+        <MudTh>Driver</MudTh>
+        <MudTh>Fastest Lap</MudTh>
+        <MudTh>Points</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @if (context.Position < 0)
+        {
+            <MudTd DataLabel="Position">DNF</MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Position">@context.Position</MudTd>
+        }
+        <MudTd DataLabel="Driver">@context.DriverGuid</MudTd>
+        @if (context.FastestLap == false)
+        {
+            <MudTd DataLabel="Fastest Lap"></MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Fastest Lap">@context.FastestLap</MudTd>
+        }
+        <MudTd DataLabel="Points">@context.Points</MudTd>
+    </RowTemplate>
+    <NoRecordsContent>
+        <MudText>No records found...</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>Fetching data...</MudText>
+    </LoadingContent>
+</MudTable>
+
+@code {
+    [Parameter]
+    public Guid TrackGuid { get; set; }
+
+    private Track _trackInstance;
+    
+    protected override void OnInitialized()
+    {
+        foreach (var track in DatabaseManager.Tracks)
+        {
+            if (track.Guid == TrackGuid)
+            {
+                _trackInstance = track;
+            }
+        }
+    }
+    
+    private async Task<TableData<Results>> FetchResultsFromTrack(TableState state, CancellationToken token)
+    {
+        var data = await DatabaseManager.SupabaseClient.From<Results>()
+            .Filter(results => results.Guid, Constants.Operator.In, _trackInstance.ResultsGuid)
+            .Get();
+
+        foreach (var result in data.Models)
+        {
+            result.AssignDriver();
+        }
+        
+        var totalItems = data.Models.Count;
+
+        var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+
+        return new TableData<Results> { TotalItems = totalItems, Items = pagedData };
+    }
+}
