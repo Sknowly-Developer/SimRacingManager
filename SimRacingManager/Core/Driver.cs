@@ -17,4 +17,7 @@ public class Driver : BaseModel
     
     [Column("number")]
     public int Number { get; set; }
+
+    public int Position;
+    public int Points;
 }

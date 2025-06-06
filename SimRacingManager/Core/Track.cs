@@ -18,7 +18,8 @@ public class Track : BaseModel
     public DateTime Date { get; set; }
     
     [Column("results")]
-    public Guid? Results { get; set; }
+    public Guid? ResultsGuid { get; set; }
+    public Results Result;
     
     //
     

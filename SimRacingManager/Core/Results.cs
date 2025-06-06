@@ -13,7 +13,8 @@ public class Results : BaseModel
     public Guid TrackGuid { get; set; }
     
     [Column("positions")]
-    public Guid[]? Positions { get; set; }
+    public Guid[]? PositionsGuid { get; set; }
+    public List<Driver> Positions = [];
     
     [Column("points")]
     public int[]? Points { get; set; }

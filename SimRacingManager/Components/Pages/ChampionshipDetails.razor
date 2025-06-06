@@ -1,8 +1,9 @@
 ﻿@page "/ChampionshipDetails/{ChampionshipGuid:guid}"
 
-@using Microsoft.AspNetCore.Mvc.ModelBinding
 @using SimRacingManager.Core
 @using Supabase.Postgrest
+
+@inject NavigationManager Navigation
 
 @rendermode InteractiveServer
 
@@ -22,7 +23,7 @@
         <MudTh>Points</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Position"></MudTd>
+        <MudTd DataLabel="Position">@context.Position</MudTd>
         @if (context.Number < 0)
         {
             <MudTd DataLabel="Name">[?] @context.Name @context.Surname</MudTd>
@@ -31,7 +32,7 @@
         {
             <MudTd DataLabel="Name">[@context.Number] @context.Name @context.Surname</MudTd>
         }
-        <MudTd DataLabel="Points"></MudTd>
+        <MudTd DataLabel="Points">@context.Points</MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No records found...</MudText>
@@ -43,7 +44,7 @@
 
 <br/>
 
-<MudTable ServerData="FetchTracksFromChampionship">
+<MudTable ServerData="FetchTracksFromChampionship" Hover="true" RowClass="cursor-pointer" T="Track" OnRowClick="RowClickEvent">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Tracks</MudText>
     </ToolBarContent>
@@ -87,6 +88,11 @@
         }
     }
 
+    private void RowClickEvent(TableRowClickEventArgs<Track> tableRowClickEventArgs)
+    {
+        Navigation.NavigateTo($"TrackResultsDetails/{tableRowClickEventArgs.Item.Result}");
+    }
+
     private async Task<TableData<Driver>> FetchDriversFromChampionship(TableState state, CancellationToken token)
     {
         var data = await DatabaseManager.SupabaseClient.From<Driver>()
@@ -97,7 +103,7 @@
         {
             _championshipInstance.Drivers.Add(driver);
         }
-        
+
         var totalItems = data.Models.Count;
 
         var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
@@ -116,6 +122,7 @@
         {
             track.Initialize();
         }
+
         var totalItems = data.Models.Count;
 
         var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
