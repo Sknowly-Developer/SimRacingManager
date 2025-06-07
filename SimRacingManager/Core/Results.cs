@@ -12,60 +12,18 @@ public class Results : BaseModel
     [Column("track")]
     public Guid TrackGuid { get; set; }
     
-    [Column("1st")]
-    public Guid? First { get; set; }
+    [Column("positions")]
+    public Guid[]? Positions { get; set; }
     
-    [Column("2nd")]
-    public Guid? Second { get; set; }
+    [Column("points")]
+    public int[]? Points { get; set; }
     
-    [Column("3rd")]
-    public Guid? Third { get; set; }
-    
-    [Column("4th")]
-    public Guid? Fourth { get; set; }
-    
-    [Column("5th")]
-    public Guid? Fifth { get; set; }
-    
-    [Column("6th")]
-    public Guid? Sixth { get; set; }
-    
-    [Column("7th")]
-    public Guid? Seventh { get; set; }
-    
-    [Column("8th")]
-    public Guid? Eighth { get; set; }
-    
-    [Column("9th")]
-    public Guid? Ninth { get; set; }
-    
-    [Column("10th")]
-    public Guid? Tenth { get; set; }
-    
-    [Column("11th")]
-    public Guid? Eleventh { get; set; }
-    
-    [Column("12th")]
-    public Guid? Twelfth { get; set; }
+    [Column("fastest_lap")]
+    public Guid FastestLap { get; set; }
 
-    private Dictionary<string, int> _positionPoints = new()
-    {
-        { "First", 6 },
-        { "Second", 5 },
-        { "Third", 4 },
-        { "Fourth", 3 },
-        { "Fifth", 2 },
-        { "Sixth", 1 }
-    };
-
-    public void AssignPointsToDrivers()
-    {
-        foreach (var point in _positionPoints)
-        {
-            if (point.Key.Equals(nameof(First)))
-            {
-                Console.WriteLine(point.Value);
-            }
-        }
-    }
+    [Column("dnf")]
+    public Guid[]? DidNotFinishes { get; set; }
+    
+    [Column("reached_points")]
+    public Guid[]? ReachedPoints { get; set; }
 }
