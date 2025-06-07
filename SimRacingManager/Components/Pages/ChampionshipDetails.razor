@@ -1,5 +1,6 @@
 ﻿@page "/ChampionshipDetails/{ChampionshipGuid:guid}"
 
+@using Microsoft.AspNetCore.Mvc.ModelBinding
 @using SimRacingManager.Core
 @using Supabase.Postgrest
 
@@ -108,13 +109,13 @@
     {
         var data = await DatabaseManager.SupabaseClient.From<Track>()
             .Filter(track => track.Guid, Constants.Operator.In, _championshipInstance.TracksGuid)
+            .Order(track => track.Date, Constants.Ordering.Ascending)
             .Get();
 
         foreach (var track in data.Models)
         {
             track.Initialize();
         }
-        
         var totalItems = data.Models.Count;
 
         var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
