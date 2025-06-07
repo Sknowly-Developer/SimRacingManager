@@ -17,10 +17,6 @@ public class Track : BaseModel
     [Column("date")]
     public DateTime Date { get; set; }
     
-    [Column("winner")]
-    public Guid? WinnerGuid { get; set; }
-    public Driver? Winner;
-    
     [Column("results")]
     public Guid? Results { get; set; }
     
@@ -29,17 +25,6 @@ public class Track : BaseModel
     public Status Status = Status.Next;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
-
-    public void AssignWinner()
-    {
-        foreach (var driver in DatabaseManager.Drivers)
-        {
-            if (WinnerGuid == driver.Guid)
-            {
-                Winner = driver;
-            }
-        }
-    }
     
     public void Initialize()
     {

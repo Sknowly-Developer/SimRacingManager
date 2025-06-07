@@ -22,7 +22,14 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Position"></MudTd>
-        <MudTd DataLabel="Name">[@context.Number] @context.Name @context.Surname</MudTd>
+        @if (context.Number < 0)
+        {
+            <MudTd DataLabel="Name">[?] @context.Name @context.Surname</MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Name">[@context.Number] @context.Name @context.Surname</MudTd>
+        }
         <MudTd DataLabel="Points"></MudTd>
     </RowTemplate>
     <NoRecordsContent>
@@ -42,26 +49,16 @@
     <ColGroup>
         <col />
         <col />
-        <col />
         <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Date</MudTh>
-        <MudTh>Winner</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Date">@context.Date.ToShortDateString()</MudTd>
-        @if (context.Winner != null)
-        {
-            <MudTd DataLabel="Winner">@context.Winner.Name @context.Winner.Surname</MudTd>
-        }
-        else
-        {
-            <MudTd DataLabel="Winner"></MudTd>
-        }
         <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
     <NoRecordsContent>
@@ -116,7 +113,6 @@
         foreach (var track in data.Models)
         {
             track.Initialize();
-            track.AssignWinner();
         }
         
         var totalItems = data.Models.Count;
