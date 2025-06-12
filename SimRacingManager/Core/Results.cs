@@ -20,7 +20,10 @@ public class Results : BaseModel
     public int Points { get; set; }
     
     [Column("fastest_lap")]
-    public bool FastestLap { get; set; }
+    public string? FastestLap { get; set; }
+    
+    [Column("gap")]
+    public string? Gap { get; set; }
     
     public void AssignDriver()
     {

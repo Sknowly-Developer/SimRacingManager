@@ -20,11 +20,12 @@
     <HeaderContent>
         <MudTh>Position</MudTh>
         <MudTh>Driver</MudTh>
+        <MudTh>Gap</MudTh>
         <MudTh>Fastest Lap</MudTh>
         <MudTh>Points</MudTh>
     </HeaderContent>
     <RowTemplate>
-        @if (context.Position < 0)
+        @if (context.Position == 1000) // This is the number which I am using for drivers that DNF'ed.
         {
             <MudTd DataLabel="Position">DNF</MudTd>
         }
@@ -33,7 +34,8 @@
             <MudTd DataLabel="Position">@context.Position</MudTd>
         }
         <MudTd DataLabel="Driver">@context.DriverGuid</MudTd>
-        @if (context.FastestLap == false)
+        <MudTd DataLabel="Gap">@context.Gap</MudTd>
+        @if (context.FastestLap == null)
         {
             <MudTd DataLabel="Fastest Lap"></MudTd>
         }
@@ -72,6 +74,7 @@
     {
         var data = await DatabaseManager.SupabaseClient.From<Results>()
             .Filter(results => results.Guid, Constants.Operator.In, _trackInstance.ResultsGuid)
+            .Order(results => results.Position, Constants.Ordering.Ascending)
             .Get();
 
         foreach (var result in data.Models)
