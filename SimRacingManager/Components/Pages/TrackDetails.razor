@@ -33,7 +33,7 @@
         {
             <MudTd DataLabel="Position">@context.Position</MudTd>
         }
-        <MudTd DataLabel="Driver">@context.DriverGuid</MudTd>
+        <MudTd DataLabel="Driver">@context.Driver.Name @context.Driver.Surname</MudTd>
         <MudTd DataLabel="Gap">@context.Gap</MudTd>
         @if (context.FastestLap == null)
         {

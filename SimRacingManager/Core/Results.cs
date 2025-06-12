@@ -32,7 +32,7 @@ public class Results : BaseModel
             if (driver.Guid == DriverGuid)
             {
                 Driver = driver;
-            }   
+            }
         }
     }
 }
