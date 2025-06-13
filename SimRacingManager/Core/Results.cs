@@ -22,8 +22,8 @@ public class Results : BaseModel
     [Column("fastest_lap")]
     public string? FastestLap { get; set; }
     
-    [Column("gap")]
-    public string? Gap { get; set; }
+    [Column("time")]
+    public string? Time { get; set; }
     
     public void AssignDriver()
     {

@@ -16,25 +16,33 @@
         <col />
         <col />
         <col />
+        <col />
     </ColGroup>
     <HeaderContent>
         <MudTh>Position</MudTh>
         <MudTh>Driver</MudTh>
-        <MudTh>Gap</MudTh>
+        <MudTh>Time/Retired</MudTh>
         <MudTh>Fastest Lap</MudTh>
         <MudTh>Points</MudTh>
     </HeaderContent>
     <RowTemplate>
-        @if (context.Position == 1000) // This is the number which I am using for drivers that DNF'ed.
+        @if (context.Position == 32767) // This is largest smallint, which I am using for drivers that didn't finish the race.
         {
-            <MudTd DataLabel="Position">DNF</MudTd>
+            <MudTd DataLabel="Position">NC</MudTd> // NC stands for Not Classified, means they didn't 100% complete the race.
         }
         else
         {
             <MudTd DataLabel="Position">@context.Position</MudTd>
         }
-        <MudTd DataLabel="Driver">@context.Driver.Name @context.Driver.Surname</MudTd>
-        <MudTd DataLabel="Gap">@context.Gap</MudTd>
+        <MudTd DataLabel="Driver">[@context.Driver.Number] @context.Driver.Name @context.Driver.Surname</MudTd>
+        @if (context.Time == null)
+        {
+            <MudTd DataLabel="Time/Retired">DNF</MudTd>
+        }
+        else
+        {
+            <MudTd DataLabel="Time/Retired">@context.Time</MudTd>   
+        }
         @if (context.FastestLap == null)
         {
             <MudTd DataLabel="Fastest Lap"></MudTd>

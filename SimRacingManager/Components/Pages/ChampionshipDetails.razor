@@ -24,14 +24,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Position">@context.Position</MudTd>
-        @if (context.Number < 0)
-        {
-            <MudTd DataLabel="Name">[?] @context.Name @context.Surname</MudTd>
-        }
-        else
-        {
-            <MudTd DataLabel="Name">[@context.Number] @context.Name @context.Surname</MudTd>
-        }
+        <MudTd DataLabel="Name">[@context.Number] @context.Name @context.Surname</MudTd>
         <MudTd DataLabel="Points">@context.Points</MudTd>
     </RowTemplate>
     <NoRecordsContent>
