@@ -22,6 +22,7 @@
         <col />
         <col />
         <col />
+        <col />
         <col style="width: 1%" />
     </ColGroup>
     <HeaderContent>
@@ -31,6 +32,7 @@
         <MudTh>Races</MudTh>
         <MudTh>Period</MudTh>
         <MudTh>Winner</MudTh>
+        <MudTh>Car Class</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -54,6 +56,7 @@
         {
             <MudTd DataLabel="Winner">@context.Winner.Name @context.Winner.Surname</MudTd>
         }
+        <MudTd DataLabel="Car Class">@context.CarClass</MudTd>
         <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
     </RowTemplate>
     <NoRecordsContent>

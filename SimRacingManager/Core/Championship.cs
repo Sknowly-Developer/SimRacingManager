@@ -29,6 +29,9 @@ public class Championship : BaseModel
     public Guid[]? TracksGuid { get; set; }
     public List<Track> Tracks = [];
     
+    [Column("car_class")]
+    public string CarClass { get; set; }
+    
     //
     
     public Track? Next;
