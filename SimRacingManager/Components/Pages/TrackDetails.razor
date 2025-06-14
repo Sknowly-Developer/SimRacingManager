@@ -88,7 +88,7 @@
         foreach (var result in data.Models)
         {
             result.AssignDriver();
-            result.AddFastestLapPoint();
+            result.AddExtraPoints();
         }
         
         var totalItems = data.Models.Count;

@@ -24,12 +24,24 @@ public class Results : BaseModel
     
     [Column("time")]
     public string? Time { get; set; }
+    
+    [Column("reaching_top_x_points")]
+    public int? ReachingTopXPoints { get; set; }
 
-    public void AddFastestLapPoint()
+    /// <summary>
+    /// Adding up the extra points from the fastest lap and for reaching the top X if a player didn't last time. 
+    /// </summary>
+    public void AddExtraPoints()
     {
         if (FastestLap != null)
         {
             Points += 1;
+        }
+
+        if (ReachingTopXPoints != null)
+        {
+            // Casting to an int because the value shouldn't be null if it gets through this if statement.
+            Points += (int)ReachingTopXPoints;
         }
     }
     
