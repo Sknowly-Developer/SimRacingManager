@@ -24,6 +24,14 @@ public class Results : BaseModel
     
     [Column("time")]
     public string? Time { get; set; }
+
+    public void AddFastestLapPoint()
+    {
+        if (FastestLap != null)
+        {
+            Points += 1;
+        }
+    }
     
     public void AssignDriver()
     {
