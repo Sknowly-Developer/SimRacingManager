@@ -96,6 +96,11 @@
     
     private async Task<TableData<Results>> FetchResultsFromTrack(TableState state, CancellationToken token)
     {
+        if (_trackInstance.ResultsGuid == null)
+        {
+            return new TableData<Results> { TotalItems = 0, Items = null };
+        }
+        
         var data = await DatabaseManager.SupabaseClient.From<Results>()
             .Filter(results => results.Guid, Constants.Operator.In, _trackInstance.ResultsGuid)
             .Order(results => results.Position, Constants.Ordering.Ascending)

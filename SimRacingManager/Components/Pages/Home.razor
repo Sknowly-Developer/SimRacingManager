@@ -3,6 +3,7 @@
 @using SimRacingManager.Core
 @using SimRacingManager.Enumerations
 @using Supabase.Postgrest
+@using Supabase.Postgrest.Responses
 
 @inject NavigationManager Navigation
 
@@ -28,7 +29,7 @@
         <MudTh>Next</MudTh>
         <MudTh>Races</MudTh>
         <MudTh>Period</MudTh>
-        <MudTh>Winner</MudTh>
+        <MudTh>Leader</MudTh>
         <MudTh>Car Class</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
@@ -52,13 +53,17 @@
             <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
         }
         <MudTd DataLabel="Period">@context.CombinedDates</MudTd>
-        @if (context.Winner == null)
+        @if (context.Status == Status.Completed)
         {
-            <MudTd DataLabel="Winner"></MudTd>
+            <MudTd DataLabel="Leader">🎉 @context.Winner.Name @context.Winner.Surname 🎉</MudTd>
+        }
+        else if (context.Winner.Points == 0)
+        {
+            <MudTd DataLabel="Leader"></MudTd>
         }
         else
         {
-            <MudTd DataLabel="Winner">@context.Winner.Name @context.Winner.Surname</MudTd>
+            <MudTd DataLabel="Leader">@context.Winner.Name @context.Winner.Surname</MudTd>   
         }
         <MudTd DataLabel="Car Class">@context.CarClass</MudTd>
         <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
@@ -70,6 +75,8 @@
         <MudText>Fetching data...</MudText>
     </LoadingContent>
 </MudTable>
+
+@* TODO: Lap Calculator *@
 
 @code {
     private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
@@ -100,19 +107,42 @@
                 championship.Tracks.Add(track);
                 track.Initialize();
             }
-
+            
+            var driverModels = await DatabaseManager.SupabaseClient.From<Driver>()
+                .Filter(driver => driver.Guid, Constants.Operator.In, championship.DriversGuid)
+                .Get();
+            
             championship.Initialise();
             championship.NextRace();
             championship.TracksCompletedCount();
             championship.CombineDates();
+            
+            await DetermineWinner(driverModels, championship);
         }
-        
-        Championship.AssignWinner(championshipModels.Models);
         
         var totalItems = championshipModels.Models.Count;
 
         var pagedData = championshipModels.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList().OrderByDescending(championship => championship.Name); // Need to sort it here otherwise the data is all messed up when it's fetched.
 
         return new TableData<Championship> { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private async Task DetermineWinner(ModeledResponse<Driver> driverModels, Championship championship)
+    {
+        List<Driver> tempDriverList = [];
+
+        foreach (var driver in driverModels.Models)
+        {
+            tempDriverList.Add(driver);
+            driver.Points = await DatabaseManager.FetchTotalPointsPerChampionship(championship, driver.Guid);
+        }
+
+        var sortedDrivers = tempDriverList.OrderByDescending(driver => driver.Points).ToList();
+        championship.Winner = sortedDrivers[0];
+
+        if (championship.Winner.Points == 0)
+        {
+            
+        }
     }
 }
