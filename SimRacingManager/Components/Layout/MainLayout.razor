@@ -5,7 +5,8 @@
 @inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudPopoverProvider />
 
 <MudDialogProvider /> @* Needed for dialogs *@
 <MudSnackbarProvider /> @* Needed for snackbars *@
@@ -18,6 +19,9 @@
             </MudText>
         </MudBadge>
         <MudSpacer/>
+        <MudTooltip Text="@(_isDarkMode ? "Light Mode" : "Dark Mode")" Arrow="true" Placement="Placement.Bottom">
+            <MudToggleIconButton @bind-Toggled="_isDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Color="@Color.Inherit" ToggledColor="@Color.Default" ToggledIcon="@Icons.Material.Filled.LightMode" /> @* TODO: Make it so you can choose Auto as an option as well, so the theme matches your system's theme *@
+        </MudTooltip>
         <MudText Align="Align.End">@_currentDate.ToShortDateString()</MudText>
     </MudAppBar>
     <MudMainContent>
@@ -36,6 +40,9 @@
 @code {
     private DateTime _currentDate = DateTime.Today;
     private const string CurrentVersion = "PRE-ALPHA";
+    
+    private MudTheme _theme = new();
+    private bool _isDarkMode; // TODO: Need to make it so this theme is stored in local storage, so it doesn't reset the next time you browse to the page.
     
     protected override void OnInitialized()
     {
