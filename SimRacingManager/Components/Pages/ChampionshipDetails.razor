@@ -103,10 +103,11 @@
         {
             driver.Points = await DatabaseManager.FetchTotalPointsPerChampionship(_championshipInstance, driver.Guid);
         }
-
+        
         var totalItems = _championshipInstance.Drivers.Count;
 
-        var pagedData = _championshipInstance.Drivers.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+        // OrderByDescending for it to order from the highest points to lowest.
+        var pagedData = _championshipInstance.Drivers.OrderByDescending(driver => driver.Points).Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
 
         return new TableData<Driver> { TotalItems = totalItems, Items = pagedData };
     }
