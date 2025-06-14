@@ -1,5 +1,6 @@
 ﻿using MudBlazor;
 using SimRacingManager.Enumerations;
+using SimRacingManager.Miscellaneous;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
@@ -17,18 +18,16 @@ public class Track : BaseModel
     [Column("date")]
     public DateTime Date { get; set; }
     
-    [Column("countdown")]
-    public string Countdown { get; set; }
-    
     [Column("results")]
     public Guid[]? ResultsGuid { get; set; }
     
     //
     
+    public string? Countdown;
+    public Color CountdownColour;
     public Status Status = Status.Next;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
-    public Championship ChampionshipInstance;
     
     public void Initialize()
     {
@@ -42,7 +41,8 @@ public class Track : BaseModel
 
         SetStatus();
         SetStatusColour();
-        SetCountdownTimer();
+        Countdown = TrackHelper.TrackRemainingTimeAndColour(Date).Item1;
+        CountdownColour = TrackHelper.TrackRemainingTimeAndColour(Date).Item2;
     }
 
     /// <summary>
@@ -54,10 +54,10 @@ public class Track : BaseModel
         
         switch (dateComparison)
         {
-            case <0:
+            case < 0:
                 Status = Status.Completed;
                 break;
-            case >0:
+            case > 0:
                 Status = Status.Upcoming;
                 break;
         }
@@ -74,22 +74,6 @@ public class Track : BaseModel
             {
                 StatusColour = colour.Value;   
             }
-        }
-    }
-
-    private void SetCountdownTimer()
-    {
-        var daysRemaining = Date - DateTime.Now; 
-        Countdown = GetRemainingNextTrack();
-        return;
-
-        string GetRemainingNextTrack()
-        {
-            if (daysRemaining.Days > 1) return daysRemaining.Days + " Days";
-            if (daysRemaining is { Days: < 1, Hours: > 1 }) return daysRemaining.Hours + " Hours";
-            if (daysRemaining is { Hours: < 1, Minutes: > 1 }) return daysRemaining.Minutes + " Minutes";
-            if (daysRemaining is { Minutes: < 1, Seconds: > 1 }) return daysRemaining.Seconds + " Seconds";
-            return "";
         }
     }
 }

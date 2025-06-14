@@ -36,7 +36,7 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Year">@context.Year</MudTd>
-        @if (context.Next == null || context.TimeRemainingUntilNextTrack == "")
+        @if (context.Next == null || context.TimeRemainingUntilNextTrack == null)
         {
             <MudTd DataLabel="Next"></MudTd>
         }

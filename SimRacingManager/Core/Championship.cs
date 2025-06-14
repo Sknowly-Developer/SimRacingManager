@@ -1,5 +1,6 @@
 ﻿using MudBlazor;
 using SimRacingManager.Enumerations;
+using SimRacingManager.Miscellaneous;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
@@ -145,37 +146,8 @@ public class Championship : BaseModel
                 Next = track;
             }
         }
-        
-        var daysRemaining = Next.Date - DateTime.Now; 
-        TimeRemainingUntilNextTrack = GetRemainingNextTrack();
-        return;
 
-        string GetRemainingNextTrack()
-        {
-            if (daysRemaining.Days > 1)
-            {
-                NextColour = Color.Primary;
-                return daysRemaining.Days + " Days";
-            }
-
-            if (daysRemaining is { Days: < 1, Hours: > 1 })
-            {
-                NextColour = Color.Success;
-                return daysRemaining.Hours + " Hours";
-            }
-
-            if (daysRemaining is { Hours: < 1, Minutes: > 1 })
-            {
-                NextColour = Color.Warning;
-                return daysRemaining.Minutes + " Minutes";
-            }
-
-            if (daysRemaining is { Minutes: < 1, Seconds: > 1 })
-            {
-                NextColour = Color.Error;
-                return daysRemaining.Seconds + " Seconds";
-            }
-            return "";
-        }
+        TimeRemainingUntilNextTrack = TrackHelper.TrackRemainingTimeAndColour(Next.Date).Item1;
+        NextColour = TrackHelper.TrackRemainingTimeAndColour(Next.Date).Item2;
     }
 }
