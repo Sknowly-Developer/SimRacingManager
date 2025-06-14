@@ -1,4 +1,6 @@
 ﻿using Supabase;
+using Supabase.Postgrest;
+using Client = Supabase.Client;
 
 namespace SimRacingManager.Core;
 
@@ -124,5 +126,37 @@ public class DatabaseManager
         {
             Console.WriteLine($"Unable to fetch results. Exception: {e}");
         }
+    }
+
+    public static async Task<int> FetchTotalPointsPerChampionship(Championship championship, Guid driverGuid)
+    {
+        var finalPoints = 0;
+        
+        try
+        {
+            var trackModels = await SupabaseClient.From<Track>()
+                .Filter(track => track.Guid, Constants.Operator.In, championship.TracksGuid)
+                .Order(track => track.Date, Constants.Ordering.Ascending)
+                .Get();
+
+            foreach (var track in trackModels.Models)
+            {
+                var resultsModels = await SupabaseClient.From<Results>()
+                    .Filter(results => results.Guid, Constants.Operator.In, track.ResultsGuid)
+                    .Where(results => results.DriverGuid == driverGuid)
+                    .Get();
+
+                foreach (var result in resultsModels.Models)
+                {
+                    finalPoints += result.ReturnAddAllPoints();
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Unable to fetch total driver points for championship {championship.Year} {championship.Name}. Exception: {e}");
+        }
+
+        return finalPoints;
     }
 }

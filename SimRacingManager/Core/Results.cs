@@ -48,6 +48,29 @@ public class Results : BaseModel
         }
     }
     
+    /// <summary>
+    /// Adding all the points together per driver per track.
+    /// </summary>
+    /// <returns>The final amount of points.</returns>
+    public int ReturnAddAllPoints()
+    {
+        var allPoints = 0;
+        allPoints += Points;
+        
+        if (FastestLap != null)
+        {
+            allPoints += 1;
+        }
+
+        if (ReachingTopXPoints != null)
+        {
+            // Casting to an int because the value shouldn't be null if it gets through this if statement.
+            allPoints += (int)ReachingTopXPoints;
+        }
+
+        return allPoints;
+    }
+    
     public void AssignDriver()
     {
         foreach (var driver in DatabaseManager.Drivers)

@@ -3,6 +3,7 @@ using Supabase.Postgrest.Models;
 
 namespace SimRacingManager.Core;
 
+// TODO: Somehow assign vehicles per driver per championship.
 [Table("drivers")]
 public class Driver : BaseModel
 {

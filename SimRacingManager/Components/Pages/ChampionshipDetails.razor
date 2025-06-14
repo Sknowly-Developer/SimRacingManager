@@ -92,14 +92,21 @@
             .Filter(driver => driver.Guid, Constants.Operator.In, _championshipInstance.DriversGuid)
             .Get();
 
+        _championshipInstance.Drivers.Clear();
+        
         foreach (var driver in data.Models)
         {
             _championshipInstance.Drivers.Add(driver);
         }
 
-        var totalItems = data.Models.Count;
+        foreach (var driver in _championshipInstance.Drivers)
+        {
+            driver.Points = await DatabaseManager.FetchTotalPointsPerChampionship(_championshipInstance, driver.Guid);
+        }
 
-        var pagedData = data.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+        var totalItems = _championshipInstance.Drivers.Count;
+
+        var pagedData = _championshipInstance.Drivers.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
 
         return new TableData<Driver> { TotalItems = totalItems, Items = pagedData };
     }
