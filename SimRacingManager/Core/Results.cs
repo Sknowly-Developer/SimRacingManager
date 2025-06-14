@@ -18,6 +18,7 @@ public class Results : BaseModel
     
     [Column("points")]
     public int Points { get; set; }
+    public int TotalPoints;
     
     [Column("fastest_lap")]
     public string? FastestLap { get; set; }
@@ -31,17 +32,19 @@ public class Results : BaseModel
     /// <summary>
     /// Adding up the extra points from the fastest lap and for reaching the top X if a player didn't last time. 
     /// </summary>
-    public void AddExtraPoints()
+    public void AddAllPoints()
     {
+        TotalPoints += Points;
+        
         if (FastestLap != null)
         {
-            Points += 1;
+            TotalPoints += 1;
         }
 
         if (ReachingTopXPoints != null)
         {
             // Casting to an int because the value shouldn't be null if it gets through this if statement.
-            Points += (int)ReachingTopXPoints;
+            TotalPoints += (int)ReachingTopXPoints;
         }
     }
     

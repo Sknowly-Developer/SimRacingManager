@@ -5,6 +5,8 @@
 
 @rendermode InteractiveServer
 
+<MudPopoverProvider />
+
 <MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_trackInstance.Name</MudText>
 
 <MudTable ServerData="FetchResultsFromTrack">
@@ -51,7 +53,22 @@
         {
             <MudTd DataLabel="Fastest Lap">@context.FastestLap</MudTd>
         }
-        <MudTd DataLabel="Points">@context.Points</MudTd>
+        <MudTd DataLabel="Points">
+            <MudTooltip Text="Arrow Right" Arrow="true" Placement="Placement.Right">
+                <ChildContent>@context.TotalPoints</ChildContent>
+                <TooltipContent>
+                    <MudText Typo="Typo.body2">Race Points: @context.Points</MudText>
+                    @if (context.FastestLap != null)
+                    {
+                        <MudText Typo="Typo.body2">Fastest Lap Point: 1</MudText>
+                    }
+                    @if (context.ReachingTopXPoints != null)
+                    {
+                        <MudText Typo="Typo.body2">Reaching Top X Points: @context.ReachingTopXPoints</MudText>   
+                    }
+                </TooltipContent>
+            </MudTooltip>
+        </MudTd>
     </RowTemplate>
     <NoRecordsContent>
         <MudText>No race results found...</MudText>
@@ -88,7 +105,7 @@
         foreach (var result in data.Models)
         {
             result.AssignDriver();
-            result.AddExtraPoints();
+            result.AddAllPoints();
         }
         
         var totalItems = data.Models.Count;
