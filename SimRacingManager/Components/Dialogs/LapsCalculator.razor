@@ -1,0 +1,26 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField Label="Race Time" Placeholder="HH:MM:SS" @bind-Value="_totalRaceTime" Class="mb-5" />
+        <MudTextField Label="Average Lap Time" Placeholder="HH:MM:SS" @bind-Value="_averageLapTime" Class="mb-5" />
+        <MudText>@_totalLaps Laps</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="CalculateLaps">Calculate</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private TimeSpan? _totalRaceTime = new TimeSpan(00, 45, 00);
+    private TimeSpan? _averageLapTime = TimeSpan.Zero;
+    private double _totalLaps;
+
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void CalculateLaps()
+    {
+        _totalLaps = double.Round(TimeSpan.Parse(_totalRaceTime.ToString()).TotalSeconds / TimeSpan.Parse(_averageLapTime.ToString()).TotalSeconds, MidpointRounding.AwayFromZero);
+    }
+}

@@ -1,4 +1,7 @@
 ﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject IDialogService DialogService
+
+@using SimRacingManager.Components.Dialogs
 @using SimRacingManager.Core
 @using SimRacingManager.Data
 @using SimRacingManager.Miscellaneous
@@ -9,7 +12,7 @@
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider" />
 <MudPopoverProvider />
 
-<MudDialogProvider /> @* Needed for dialogs *@
+<MudDialogProvider FullWidth="true" CloseOnEscapeKey="true" Position="DialogPosition.Center" /> @* Needed for dialogs *@
 <MudSnackbarProvider /> @* Needed for snackbars *@
 
 @* TODO: Need to fix all warnings during a build *@
@@ -22,8 +25,11 @@
             </MudText>
         </MudBadge>
         <MudSpacer/>
+        <MudTooltip Text="Laps Calculator" Arrow="true" Placement="Placement.Bottom">
+            <MudIconButton Color="@Color.Inherit" Icon="@Icons.Material.Filled.Calculate" @onclick="OpenDialogAsync" />
+        </MudTooltip>
         <MudTooltip Text="@selectedTooltip" Arrow="true" Placement="Placement.Bottom">
-            <MudIconButton Color="@Color.Inherit" Icon="@selectedIcon" OnClick="@((e) => ToggleDarkMode(true))"/>
+            <MudIconButton Color="@Color.Inherit" Icon="@selectedIcon" OnClick="@((e) => ToggleDarkMode(true))" />
         </MudTooltip>
         <MudText Align="Align.End">@_currentDate.ToShortDateString()</MudText>
     </MudAppBar>
@@ -50,37 +56,6 @@
     
     private bool _isDarkMode;
     private int _toggleAmount;
-
-    private async void ToggleDarkMode(bool toggle)
-    {
-        if (toggle) _toggleAmount++;
-        if (_toggleAmount >= 3) _toggleAmount = 0;
-        
-        switch (_toggleAmount)
-        {
-            case 0:
-                selectedIcon = Icons.Material.Filled.LightMode;
-                selectedTooltip = "Light Mode";
-                break;
-            case 1:
-                selectedIcon = Icons.Material.Filled.AutoMode;
-                selectedTooltip = "Auto Mode";
-                break;
-            case 2:
-                selectedIcon = Icons.Material.Outlined.DarkMode;
-                selectedTooltip = "Dark Mode";
-                break;
-        }
-
-        _isDarkMode = _toggleAmount switch
-        {
-            0 => true,
-            1 => false,
-            2 => await _mudThemeProvider.GetSystemDarkModeAsync(),
-            _ => _isDarkMode
-        };
-        StateHasChanged();
-    }
     
     protected override void OnInitialized()
     {
@@ -124,5 +99,48 @@
             StateHasChanged();
         }
         await LocalStorage.SetItemAsync("toggleAmount", _toggleAmount);
+    }
+
+    private Task OpenDialogAsync()
+    {
+        return DialogService.ShowAsync<LapsCalculator>("Laps Calculator", new DialogOptions());
+    }
+    
+    private async void ToggleDarkMode(bool toggle)
+    {
+        if (toggle)
+        {
+            _toggleAmount++;
+        }
+        if (_toggleAmount >= 3)
+        {
+            _toggleAmount = 0;
+        }
+        
+        switch (_toggleAmount)
+        {
+            case 0:
+                selectedIcon = Icons.Material.Filled.LightMode;
+                selectedTooltip = "Light Mode";
+                break;
+            case 1:
+                selectedIcon = Icons.Material.Filled.AutoMode;
+                selectedTooltip = "Auto Mode";
+                break;
+            case 2:
+                selectedIcon = Icons.Material.Outlined.DarkMode;
+                selectedTooltip = "Dark Mode";
+                break;
+        }
+
+        _isDarkMode = _toggleAmount switch
+        {
+            0 => true,
+            1 => false,
+            2 => await _mudThemeProvider.GetSystemDarkModeAsync(),
+            _ => _isDarkMode
+        };
+        
+        StateHasChanged();
     }
 }
