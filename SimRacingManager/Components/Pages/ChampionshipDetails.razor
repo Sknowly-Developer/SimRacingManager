@@ -1,6 +1,7 @@
 ﻿@page "/ChampionshipDetails/{ChampionshipGuid:guid}"
 
 @using SimRacingManager.Core
+@using SimRacingManager.Data
 @using Supabase.Postgrest
 
 @inject NavigationManager Navigation
@@ -14,15 +15,19 @@
     <ColGroup>
         <col style="width: 8%" />
         <col />
+        <col />
+        <col />
     </ColGroup>
     <HeaderContent>
         <MudTh>Position</MudTh>
         <MudTh>Name</MudTh>
+        <MudTh>Vehicle</MudTh>
         <MudTh>Points</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Position">@context.Position</MudTd>
         <MudTd DataLabel="Name">[@context.Number] @context.Name @context.Surname</MudTd>
+        <MudTd DataLabel="Vehicle">@context.VehicleType</MudTd>
         <MudTd DataLabel="Points">@context.Points</MudTd>
     </RowTemplate>
     <NoRecordsContent>
@@ -75,6 +80,7 @@
             if (championship.Guid == ChampionshipGuid)
             {
                 _championshipInstance = championship;
+                Globals.LastSelectedChampionship = _championshipInstance;
             }
         }
     }
@@ -100,6 +106,7 @@
         foreach (var driver in _championshipInstance.Drivers)
         {
             driver.Points = await DatabaseManager.FetchTotalPointsPerChampionship(_championshipInstance, driver.Guid);
+            driver.VehicleType = await DatabaseManager.FetchVehiclesFromChampionship(_championshipInstance, driver.Guid);
         }
 
         var sortedDrivers = _championshipInstance.Drivers.OrderByDescending(driver => driver.Points).ToList();
