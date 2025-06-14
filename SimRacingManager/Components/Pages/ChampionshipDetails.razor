@@ -103,6 +103,12 @@
         {
             driver.Points = await DatabaseManager.FetchTotalPointsPerChampionship(_championshipInstance, driver.Guid);
         }
+
+        var sortedDrivers = _championshipInstance.Drivers.OrderByDescending(driver => driver.Points).ToList();
+        for (var i = 0; i < sortedDrivers.Count; i++)
+        {
+            sortedDrivers[i].Position = i + 1;
+        }
         
         var totalItems = _championshipInstance.Drivers.Count;
 
