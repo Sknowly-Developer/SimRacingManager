@@ -92,6 +92,11 @@
 
     private async Task<TableData<Driver>> FetchDriversFromChampionship(TableState state, CancellationToken token)
     {
+        if (_championshipInstance.DriversGuid == null)
+        {
+            return new TableData<Driver> { TotalItems = 0, Items = null };
+        }
+        
         var data = await DatabaseManager.SupabaseClient.From<Driver>()
             .Filter(driver => driver.Guid, Constants.Operator.In, _championshipInstance.DriversGuid)
             .Get();
@@ -125,6 +130,11 @@
     
     private async Task<TableData<Track>> FetchTracksFromChampionship(TableState state, CancellationToken token)
     {
+        if (_championshipInstance.TracksGuid == null)
+        {
+            return new TableData<Track> { TotalItems = 0, Items = null };
+        }
+        
         var data = await DatabaseManager.SupabaseClient.From<Track>()
             .Filter(track => track.Guid, Constants.Operator.In, _championshipInstance.TracksGuid)
             .Order(track => track.Date, Constants.Ordering.Ascending)
