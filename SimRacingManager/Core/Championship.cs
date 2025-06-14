@@ -30,7 +30,7 @@ public class Championship : BaseModel
     public List<Track> Tracks = [];
     
     [Column("car_class")]
-    public string CarClass { get; set; }
+    public string? CarClass { get; set; }
     
     [Column("vehicles")]
     public Guid[]? VehiclesGuid { get; set; }
@@ -59,7 +59,15 @@ public class Championship : BaseModel
 
     private void SetStatus()
     {
-        if (DateTime.Today < Tracks[Tracks.Count - 1].Date)
+        if (TracksGuid == null)
+        {
+            Status = Status.Upcoming;
+        }
+        else if (DateTime.Today < Tracks[0].Date)
+        {
+            Status = Status.Upcoming;
+        }
+        else if (DateTime.Today < Tracks[Tracks.Count - 1].Date)
         {
             Status = Status.Ongoing;
         }
@@ -68,7 +76,7 @@ public class Championship : BaseModel
     /// <summary>
     /// Set the StatusColour field to whatever Colour value that was returned from the Dictionary.
     /// </summary>
-    private void SetStatusColour()
+    public void SetStatusColour()
     {
         foreach (var colour in _statusColourDictionary)
         {
