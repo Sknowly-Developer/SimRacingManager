@@ -81,6 +81,7 @@
         {
             var trackModels = await DatabaseManager.SupabaseClient.From<Track>()
                 .Filter(track => track.Guid, Constants.Operator.In, championship.TracksGuid)
+                .Order(track => track.Date, Constants.Ordering.Ascending)
                 .Get();
 
             foreach (var track in trackModels.Models)

@@ -36,7 +36,6 @@ public class Championship : BaseModel
     
     public Track? Next;
     public string CombinedDates;
-    private List<DateTime> _trackDates = [];
     public Status Status; // TODO: Need to create a method to automatically set this
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
@@ -51,7 +50,16 @@ public class Championship : BaseModel
         _statusColourDictionary.Add(Status.Ongoing, Color.Success);
         _statusColourDictionary.Add(Status.Upcoming, Color.Warning);
 
+        SetStatus();
         SetStatusColour();
+    }
+
+    private void SetStatus()
+    {
+        if (DateTime.Today < Tracks[Tracks.Count - 1].Date)
+        {
+            Status = Status.Ongoing;
+        }
     }
     
     /// <summary>
@@ -109,12 +117,7 @@ public class Championship : BaseModel
     /// </summary>
     public void CombineDates()
     {
-        foreach (var track in Tracks)
-        {
-            _trackDates.Add(track.Date);
-        }
-        
-        CombinedDates = $"{_trackDates[0].Date.ToShortDateString()} to {_trackDates[_trackDates.Count - 1].Date.ToShortDateString()}";
+        CombinedDates = $"{Tracks[0].Date.ToShortDateString()} to {Tracks[Tracks.Count - 1].Date.ToShortDateString()}";
     }
 
     /// <summary>
