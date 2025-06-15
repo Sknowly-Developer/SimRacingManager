@@ -17,6 +17,9 @@ public class Track : BaseModel
     [Column("date")]
     public DateTime Date { get; set; }
     
+    [Column("countdown")]
+    public string Countdown { get; set; }
+    
     [Column("results")]
     public Guid[]? ResultsGuid { get; set; }
     
@@ -39,6 +42,7 @@ public class Track : BaseModel
 
         SetStatus();
         SetStatusColour();
+        SetCountdownTimer();
     }
 
     /// <summary>
@@ -70,6 +74,22 @@ public class Track : BaseModel
             {
                 StatusColour = colour.Value;   
             }
+        }
+    }
+
+    private void SetCountdownTimer()
+    {
+        var daysRemaining = Date - DateTime.Now; 
+        Countdown = GetRemainingNextTrack();
+        return;
+
+        string GetRemainingNextTrack()
+        {
+            if (daysRemaining.Days > 1) return daysRemaining.Days + " Days";
+            if (daysRemaining is { Days: < 1, Hours: > 1 }) return daysRemaining.Hours + " Hours";
+            if (daysRemaining is { Hours: < 1, Minutes: > 1 }) return daysRemaining.Minutes + " Minutes";
+            if (daysRemaining is { Minutes: < 1, Seconds: > 1 }) return daysRemaining.Seconds + " Seconds";
+            return "";
         }
     }
 }

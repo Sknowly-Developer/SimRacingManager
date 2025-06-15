@@ -41,7 +41,7 @@
         }
         else
         {
-            <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="Color.Primary">@context.TimeRemainingUntilNextTrack</MudChip></MudTd>
+            <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="@context.NextColour">@context.TimeRemainingUntilNextTrack</MudChip></MudTd>
         }
         @if (context.TracksGuid == null)
         {
