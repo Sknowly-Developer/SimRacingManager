@@ -25,6 +25,7 @@ public class Track : BaseModel
     public Status Status = Status.Next;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
+    public Championship ChampionshipInstance;
     
     public void Initialize()
     {

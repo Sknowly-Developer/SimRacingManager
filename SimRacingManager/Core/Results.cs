@@ -1,3 +1,4 @@
+using SimRacingManager.Data;
 using Supabase.Postgrest.Attributes;
 using Supabase.Postgrest.Models;
 
@@ -71,6 +72,9 @@ public class Results : BaseModel
         return allPoints;
     }
     
+    /// <summary>
+    /// Loop through all drivers in DatabaseManager.Drivers, compare their Guids against the Driver Guid in this class and assign a Driver if they match.
+    /// </summary>
     public void AssignDriver()
     {
         foreach (var driver in DatabaseManager.Drivers)
@@ -80,5 +84,24 @@ public class Results : BaseModel
                 Driver = driver;
             }
         }
+    }
+
+    /// <summary>
+    /// Set the VehicleType of this Driver, so it shows within every track results page.
+    /// </summary>
+    public async Task<string?> AssignDriverVehicles()
+    {
+        string? vehicleType = null;
+        
+        try
+        {
+            vehicleType = await DatabaseManager.FetchVehiclesFromChampionship(Globals.LastSelectedChampionship, DriverGuid);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to fetch vehicle type for Driver - {Driver.Name} {Driver.Surname}. Exception = {e}");
+        }
+
+        return vehicleType;
     }
 }

@@ -32,11 +32,14 @@ public class Championship : BaseModel
     [Column("car_class")]
     public string CarClass { get; set; }
     
+    [Column("vehicles")]
+    public Guid[]? VehiclesGuid { get; set; }
+    
     //
     
     public Track? Next;
     public string CombinedDates;
-    public Status Status; // TODO: Need to create a method to automatically set this
+    public Status Status;
     public Color StatusColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
     public int TracksCompleted;

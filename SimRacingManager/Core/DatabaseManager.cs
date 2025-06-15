@@ -127,6 +127,33 @@ public class DatabaseManager
             Console.WriteLine($"Unable to fetch results. Exception: {e}");
         }
     }
+    
+    /// <summary>
+    /// Queries all data from the Vehicles table.
+    /// </summary>
+    public static async Task<string?> FetchVehiclesFromChampionship(Championship championship, Guid driverGuid)
+    {
+        string? vehicleType = null;
+        
+        try
+        {
+            var vehiclesModels = await SupabaseClient.From<Vehicles>()
+                .Filter(vehicles => vehicles.Guid, Constants.Operator.In, championship.VehiclesGuid)
+                .Where(vehicles => vehicles.DriverGuid == driverGuid)
+                .Get();
+
+            foreach (var vehicle in vehiclesModels.Models)
+            {
+                vehicleType = vehicle.VehicleType;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Unable to fetch vehicles. Exception: {e}");
+        }
+
+        return vehicleType;
+    }
 
     public static async Task<int> FetchTotalPointsPerChampionship(Championship championship, Guid driverGuid)
     {
