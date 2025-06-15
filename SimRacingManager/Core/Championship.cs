@@ -17,10 +17,6 @@ public class Championship : BaseModel
     [Column("year")]
     public int Year { get; set; }
     
-    [Column("winner")]
-    public Guid? WinnerGuid { get; set; }
-    public Driver? Winner;
-    
     [Column("drivers")]
     public Guid[]? DriversGuid { get; set; }
     public List<Driver> Drivers = [];
@@ -37,6 +33,7 @@ public class Championship : BaseModel
     
     //
     
+    public Driver Winner;
     public Track? Next;
     public string CombinedDates;
     public Status Status;
@@ -84,23 +81,6 @@ public class Championship : BaseModel
             if (colour.Key == Status)
             {
                 StatusColour = colour.Value;   
-            }
-        }
-    }
-    
-    /// <summary>
-    /// See if the Winner Guid from a championship matches a Driver Guid. If so, then assign a Driver object to the Winner field.
-    /// </summary>
-    public static void AssignWinner(List<Championship> championships)
-    {
-        foreach (var championship in championships)
-        {
-            foreach (var driver in DatabaseManager.Drivers)
-            {
-                if (championship.WinnerGuid == driver.Guid)
-                {
-                    championship.Winner = driver;
-                }   
             }
         }
     }
