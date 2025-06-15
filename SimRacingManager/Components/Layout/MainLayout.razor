@@ -19,8 +19,8 @@
 
 <MudLayout> 
     <MudAppBar>
-        <MudBadge Content="CurrentVersion" Overlap="true" Class="mx-6 my-4">
-            <MudButton Href="/" Variant="Variant.Text" >
+        <MudBadge Content="CurrentVersion" Overlap="true" Class="mx-6 my-4" Color="Color.Info">
+            <MudButton Href="/" Variant="Variant.Text" Color="Color.Inherit">
                  <MudText Typo="Typo.h5">Sim Racing Manager</MudText>
             </MudButton>
         </MudBadge>
@@ -28,8 +28,8 @@
         <MudTooltip Text="Laps Calculator" Arrow="true" Placement="Placement.Bottom">
             <MudIconButton Color="@Color.Inherit" Icon="@Icons.Material.Filled.Calculate" @onclick="OpenDialogAsync" />
         </MudTooltip>
-        <MudTooltip Text="@selectedTooltip" Arrow="true" Placement="Placement.Bottom">
-            <MudIconButton Color="@Color.Inherit" Icon="@selectedIcon" OnClick="@((e) => ToggleDarkMode(true))" />
+        <MudTooltip Text="@_selectedTooltip" Arrow="true" Placement="Placement.Bottom">
+            <MudIconButton Color="@Color.Inherit" Icon="@_selectedIcon" OnClick="@((e) => ToggleDarkMode(true))" />
         </MudTooltip>
         <MudText Align="Align.End">@_currentDate.ToShortDateString()</MudText>
     </MudAppBar>
@@ -48,11 +48,11 @@
 
 @code {
     private readonly DateTime _currentDate = DateTime.Today;
-    private const string CurrentVersion = "PRE-ALPHA";
+    private const string CurrentVersion = "1.0.0-beta.1";
     private MudThemeProvider? _mudThemeProvider;
 
-    private string selectedIcon;
-    private string selectedTooltip;
+    private string _selectedIcon;
+    private string _selectedTooltip;
     
     private bool _isDarkMode;
     private int _toggleAmount;
@@ -120,16 +120,16 @@
         switch (_toggleAmount)
         {
             case 0:
-                selectedIcon = Icons.Material.Filled.LightMode;
-                selectedTooltip = "Light Mode";
+                _selectedIcon = Icons.Material.Filled.LightMode;
+                _selectedTooltip = "Light Mode";
                 break;
             case 1:
-                selectedIcon = Icons.Material.Filled.AutoMode;
-                selectedTooltip = "Auto Mode";
+                _selectedIcon = Icons.Material.Filled.AutoMode;
+                _selectedTooltip = "Auto Mode";
                 break;
             case 2:
-                selectedIcon = Icons.Material.Outlined.DarkMode;
-                selectedTooltip = "Dark Mode";
+                _selectedIcon = Icons.Material.Outlined.DarkMode;
+                _selectedTooltip = "Dark Mode";
                 break;
         }
 
