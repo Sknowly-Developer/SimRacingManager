@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using SimRacingManager.Core
+@using SimRacingManager.Enumerations
 @using Supabase.Postgrest
 
 @inject NavigationManager Navigation
@@ -42,7 +43,14 @@
         {
             <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="Color.Primary">@context.TimeRemainingNextTrack Days</MudChip></MudTd>
         }
-        <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
+        @if (context.TracksGuid == null)
+        {
+            <MudTd DataLabel="Races"></MudTd>   
+        }
+        else
+        {
+            <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
+        }
         <MudTd DataLabel="Period">@context.CombinedDates</MudTd>
         @if (context.Winner == null)
         {
@@ -71,21 +79,28 @@
 
     private async Task<TableData<Championship>> FetchChampionships(TableState state, CancellationToken token)
     {
-        var championshipModels = await DatabaseManager.SupabaseClient.From<Championship>().Get();
+        var championshipModels = await DatabaseManager.SupabaseClient.From<Championship>()
+            .Get();
 
         foreach (var championship in championshipModels.Models)
         {
+            if (championship.TracksGuid == null)
+            {
+                championship.Initialise();
+                break;
+            }
+            
             var trackModels = await DatabaseManager.SupabaseClient.From<Track>()
                 .Filter(track => track.Guid, Constants.Operator.In, championship.TracksGuid)
                 .Order(track => track.Date, Constants.Ordering.Ascending)
                 .Get();
-
+            
             foreach (var track in trackModels.Models)
             {
                 championship.Tracks.Add(track);
                 track.Initialize();
             }
-            
+
             championship.Initialise();
             championship.NextRace();
             championship.TracksCompletedCount();
@@ -96,7 +111,7 @@
         
         var totalItems = championshipModels.Models.Count;
 
-        var pagedData = championshipModels.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+        var pagedData = championshipModels.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList().OrderByDescending(championship => championship.Name); // Need to sort it here otherwise the data is all messed up when it's fetched.
 
         return new TableData<Championship> { TotalItems = totalItems, Items = pagedData };
     }
