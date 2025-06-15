@@ -38,9 +38,10 @@ public class Championship : BaseModel
     public string CombinedDates;
     public Status Status;
     public Color StatusColour;
+    public Color NextColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
     public int TracksCompleted;
-    public string TimeRemainingNextTrack;
+    public string TimeRemainingUntilNextTrack;
 
     public void Initialise()
     {
@@ -145,7 +146,36 @@ public class Championship : BaseModel
             }
         }
         
-        var daysRemaining = Next.Date - DateTime.Today;
-        TimeRemainingNextTrack = daysRemaining.Days.ToString();
+        var daysRemaining = Next.Date - DateTime.Now; 
+        TimeRemainingUntilNextTrack = GetRemainingNextTrack();
+        return;
+
+        string GetRemainingNextTrack()
+        {
+            if (daysRemaining.Days > 1)
+            {
+                NextColour = Color.Primary;
+                return daysRemaining.Days + " Days";
+            }
+
+            if (daysRemaining is { Days: < 1, Hours: > 1 })
+            {
+                NextColour = Color.Success;
+                return daysRemaining.Hours + " Hours";
+            }
+
+            if (daysRemaining is { Hours: < 1, Minutes: > 1 })
+            {
+                NextColour = Color.Warning;
+                return daysRemaining.Minutes + " Minutes";
+            }
+
+            if (daysRemaining is { Minutes: < 1, Seconds: > 1 })
+            {
+                NextColour = Color.Error;
+                return daysRemaining.Seconds + " Seconds";
+            }
+            return "";
+        }
     }
 }
