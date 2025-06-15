@@ -91,11 +91,16 @@
     
     private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
     {
-        Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item.Guid}");
+        Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item?.Guid}");
     }
 
     private async Task<TableData<Championship>> FetchChampionships(TableState state, CancellationToken token)
     {
+        if (DatabaseManager.SupabaseClient == null)
+        {
+            return new TableData<Championship> { TotalItems = 0, Items = null };
+        }
+        
         var championshipModels = await DatabaseManager.SupabaseClient.From<Championship>().Get();
 
         foreach (var championship in championshipModels.Models)

@@ -13,7 +13,7 @@ public class Championship : BaseModel
     public Guid Guid { get; set; }
     
     [Column("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     
     [Column("year")]
     public int Year { get; set; }
@@ -36,13 +36,13 @@ public class Championship : BaseModel
     
     public Driver? Winner;
     public Track? Next;
-    public string CombinedDates;
+    public string CombinedDates = string.Empty;
     public Status Status = Status.Upcoming;
     public Color StatusColour = Color.Warning;
     public Color NextColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
     public int TracksCompleted;
-    public string TimeRemainingUntilNextTrack;
+    public string TimeRemainingUntilNextTrack = string.Empty;
 
     public void Initialise()
     {
@@ -143,6 +143,9 @@ public class Championship : BaseModel
             }
         }
 
+        if (Next == null) // Another silent fail which should probably be handled properly.
+            return;
+        
         TimeRemainingUntilNextTrack = TrackHelper.TrackRemainingTimeAndColour(Next.Date).Item1;
         NextColour = TrackHelper.TrackRemainingTimeAndColour(Next.Date).Item2;
     }

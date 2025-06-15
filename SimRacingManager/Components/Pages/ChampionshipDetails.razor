@@ -6,7 +6,7 @@
 
 @inject NavigationManager Navigation
 
-<MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_championshipInstance.Name</MudText>
+<MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_championshipInstance?.Name</MudText>
 
 <MudTable ServerData="FetchDriversFromChampionship">
     <ToolBarContent>
@@ -59,7 +59,7 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Date">@context.Date.ToShortDateString()</MudTd>
-        @if (context.Countdown == null)
+        @if (string.IsNullOrEmpty(context.Countdown))
         {
             <MudTd DataLabel="Countdown"></MudTd>
         }
@@ -81,7 +81,7 @@
     [Parameter]
     public Guid ChampionshipGuid { get; set; }
     
-    private Championship _championshipInstance; // Doesn't matter if this is null, it should always be assigned an instance.
+    private Championship? _championshipInstance; // Doesn't matter if this is null, it should always be assigned an instance.
     
     protected override void OnInitialized()
     {
@@ -97,12 +97,12 @@
 
     private void RowClickEvent(TableRowClickEventArgs<Track> tableRowClickEventArgs)
     {
-        Navigation.NavigateTo($"TrackDetails/{tableRowClickEventArgs.Item.Guid}");
+        Navigation.NavigateTo($"TrackDetails/{tableRowClickEventArgs.Item?.Guid}");
     }
 
     private async Task<TableData<Driver>> FetchDriversFromChampionship(TableState state, CancellationToken token)
     {
-        if (_championshipInstance.DriversGuid == null)
+        if (_championshipInstance?.DriversGuid == null || DatabaseManager.SupabaseClient == null) // Should eventually move these into their own separate if statement, because it may silently fail without knowing why.
         {
             return new TableData<Driver> { TotalItems = 0, Items = null };
         }
@@ -140,7 +140,7 @@
     
     private async Task<TableData<Track>> FetchTracksFromChampionship(TableState state, CancellationToken token)
     {
-        if (_championshipInstance.TracksGuid == null)
+        if (_championshipInstance?.TracksGuid == null || DatabaseManager.SupabaseClient == null)
         {
             return new TableData<Track> { TotalItems = 0, Items = null };
         }

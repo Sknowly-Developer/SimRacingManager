@@ -15,8 +15,6 @@
 <MudDialogProvider FullWidth="true" CloseOnEscapeKey="true" Position="DialogPosition.Center" /> @* Needed for dialogs *@
 <MudSnackbarProvider /> @* Needed for snackbars *@
 
-@* TODO: Need to fix all warnings during a build *@
-
 <MudLayout> 
     <MudAppBar>
         <MudBadge Content="CurrentVersion" Overlap="true" Class="mx-6 my-4" Color="Color.Info">
@@ -29,7 +27,7 @@
             <MudIconButton Color="@Color.Inherit" Icon="@Icons.Material.Filled.Calculate" @onclick="OpenDialogAsync" />
         </MudTooltip>
         <MudTooltip Text="@_selectedTooltip" Arrow="true" Placement="Placement.Bottom">
-            <MudIconButton Color="@Color.Inherit" Icon="@_selectedIcon" OnClick="@((e) => ToggleDarkMode(true))" />
+            <MudIconButton Color="@Color.Inherit" Icon="@_selectedIcon" OnClick="@(_ => ToggleDarkMode(true))" />
         </MudTooltip>
         <MudText Align="Align.End">@_currentDate.ToShortDateString()</MudText>
     </MudAppBar>
@@ -51,8 +49,8 @@
     private const string CurrentVersion = "1.0.0-beta.1";
     private MudThemeProvider? _mudThemeProvider;
 
-    private string _selectedIcon;
-    private string _selectedTooltip;
+    private string? _selectedIcon;
+    private string? _selectedTooltip;
     
     private bool _isDarkMode;
     private int _toggleAmount;
@@ -74,6 +72,9 @@
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (_mudThemeProvider == null)
+            return;
+        
         if (firstRender)
         {
             var contains = await LocalStorage.ContainKeyAsync("toggleAmount");
@@ -108,39 +109,49 @@
     
     private async void ToggleDarkMode(bool toggle)
     {
-        if (toggle)
+        try
         {
-            _toggleAmount++;
-        }
-        if (_toggleAmount >= 3)
-        {
-            _toggleAmount = 0;
-        }
+            if (_mudThemeProvider == null)
+                throw new NullReferenceException();
+            
+            if (toggle)
+            {
+                _toggleAmount++;
+            }
+            if (_toggleAmount >= 3)
+            {
+                _toggleAmount = 0;
+            }
         
-        switch (_toggleAmount)
-        {
-            case 0:
-                _selectedIcon = Icons.Material.Filled.LightMode;
-                _selectedTooltip = "Light Mode";
-                break;
-            case 1:
-                _selectedIcon = Icons.Material.Filled.AutoMode;
-                _selectedTooltip = "Auto Mode";
-                break;
-            case 2:
-                _selectedIcon = Icons.Material.Outlined.DarkMode;
-                _selectedTooltip = "Dark Mode";
-                break;
-        }
+            switch (_toggleAmount)
+            {
+                case 0:
+                    _selectedIcon = Icons.Material.Filled.LightMode;
+                    _selectedTooltip = "Light Mode";
+                    break;
+                case 1:
+                    _selectedIcon = Icons.Material.Filled.AutoMode;
+                    _selectedTooltip = "Auto Mode";
+                    break;
+                case 2:
+                    _selectedIcon = Icons.Material.Outlined.DarkMode;
+                    _selectedTooltip = "Dark Mode";
+                    break;
+            }
 
-        _isDarkMode = _toggleAmount switch
+            _isDarkMode = _toggleAmount switch
+            {
+                0 => true,
+                1 => false,
+                2 => await _mudThemeProvider.GetSystemDarkModeAsync(),
+                _ => _isDarkMode
+            };
+            
+            StateHasChanged();
+        }
+        catch (Exception e)
         {
-            0 => true,
-            1 => false,
-            2 => await _mudThemeProvider.GetSystemDarkModeAsync(),
-            _ => _isDarkMode
-        };
-        
-        StateHasChanged();
+            Console.WriteLine(e);
+        }
     }
 }

@@ -6,15 +6,14 @@ namespace SimRacingManager.Core;
 
 public class DatabaseManager
 {
-    private static readonly string Url = Environment.GetEnvironmentVariable("SUPABASE_URL");
-    private static readonly string Key = Environment.GetEnvironmentVariable("SUPABASE_KEY");
+    private static readonly string? Url = Environment.GetEnvironmentVariable("SUPABASE_URL");
+    private static readonly string? Key = Environment.GetEnvironmentVariable("SUPABASE_KEY");
 
-    public static Client SupabaseClient;
+    public static Client? SupabaseClient;
     
     public static List<Championship> Championships = [];
     public static List<Driver> Drivers = [];
     public static List<Track> Tracks = [];
-    public static List<Results> Results = [];
     
     /// <summary>
     /// Opens a connection to the database then keeps a reference.
@@ -27,6 +26,9 @@ public class DatabaseManager
             {
                 AutoConnectRealtime = true
             };
+
+            if (Url == null || Key == null)
+                throw new NullReferenceException();
 
             SupabaseClient = new Client(Url, Key, options);
             await SupabaseClient.InitializeAsync();
@@ -45,7 +47,6 @@ public class DatabaseManager
         FetchChampionshipsTable();
         FetchDriversTable();
         FetchTracksTable();
-        FetchResultsTable();
     }
     
     /// <summary>
@@ -55,6 +56,9 @@ public class DatabaseManager
     {
         try
         {
+            if (SupabaseClient == null)
+                throw new NullReferenceException();
+            
             var championshipModels = await SupabaseClient.From<Championship>().Get();
             
             foreach (var championship in championshipModels.Models)
@@ -75,6 +79,9 @@ public class DatabaseManager
     {
         try
         {
+            if (SupabaseClient == null)
+                throw new NullReferenceException();
+            
             var driverModels = await SupabaseClient.From<Driver>().Get();
             
             foreach (var driver in driverModels.Models)
@@ -95,6 +102,9 @@ public class DatabaseManager
     {
         try
         {
+            if (SupabaseClient == null)
+                throw new NullReferenceException();
+            
             var trackModels = await SupabaseClient.From<Track>().Get();
 
             foreach (var track in trackModels.Models)
@@ -109,34 +119,17 @@ public class DatabaseManager
     }
     
     /// <summary>
-    /// Queries all data from the Results table.
-    /// </summary>
-    private static async void FetchResultsTable()
-    {
-        try
-        {
-            var resultsModels = await SupabaseClient.From<Results>().Get();
-
-            foreach (var result in resultsModels.Models)
-            {
-                Results.Add(result);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Unable to fetch results. Exception: {e}");
-        }
-    }
-    
-    /// <summary>
     /// Queries all data from the Vehicles table.
     /// </summary>
-    public static async Task<string?> FetchVehiclesFromChampionship(Championship championship, Guid driverGuid)
+    public static async Task<string> FetchVehiclesFromChampionship(Championship championship, Guid driverGuid)
     {
-        string? vehicleType = null;
+        var vehicleType = string.Empty;
         
         try
         {
+            if (SupabaseClient == null)
+                throw new NullReferenceException();
+            
             var vehiclesModels = await SupabaseClient.From<Vehicles>()
                 .Filter(vehicles => vehicles.Guid, Constants.Operator.In, championship.VehiclesGuid)
                 .Where(vehicles => vehicles.DriverGuid == driverGuid)
@@ -144,6 +137,9 @@ public class DatabaseManager
 
             foreach (var vehicle in vehiclesModels.Models)
             {
+                if (vehicle.VehicleType == null)
+                    throw new NullReferenceException();
+                
                 vehicleType = vehicle.VehicleType;
             }
         }
@@ -161,6 +157,9 @@ public class DatabaseManager
         
         try
         {
+            if (SupabaseClient == null)
+                throw new NullReferenceException();
+            
             var trackModels = await SupabaseClient.From<Track>()
                 .Filter(track => track.Guid, Constants.Operator.In, championship.TracksGuid)
                 .Order(track => track.Date, Constants.Ordering.Ascending)
@@ -181,7 +180,10 @@ public class DatabaseManager
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Unable to fetch total driver points for championship {championship.Year} {championship.Name}. Exception: {e}");
+            if (e.GetType() != typeof(Supabase.Postgrest.Exceptions.PostgrestException)) // Adding this check here so I don't get spammed in the console for using Constants.Operator.In
+            {
+                Console.WriteLine($"Unable to fetch total driver points for championship {championship.Year} {championship.Name}. Exception: {e}");
+            }
         }
 
         return finalPoints;

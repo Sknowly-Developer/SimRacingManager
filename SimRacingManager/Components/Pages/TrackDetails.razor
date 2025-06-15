@@ -3,7 +3,7 @@
 @using SimRacingManager.Core
 @using Supabase.Postgrest
 
-<MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_trackInstance.Name</MudText>
+<MudText Typo="Typo.h5" Align="Align.Center" Class="pb-4">@_trackInstance?.Name</MudText>
 
 <MudTable ServerData="FetchResultsFromTrack">
     <ToolBarContent>
@@ -81,7 +81,7 @@
     [Parameter]
     public Guid TrackGuid { get; set; }
 
-    private Track _trackInstance;
+    private Track? _trackInstance;
     
     protected override void OnInitialized()
     {
@@ -96,7 +96,7 @@
     
     private async Task<TableData<Results>> FetchResultsFromTrack(TableState state, CancellationToken token)
     {
-        if (_trackInstance.ResultsGuid == null)
+        if (_trackInstance?.ResultsGuid == null || DatabaseManager.SupabaseClient == null)
         {
             return new TableData<Results> { TotalItems = 0, Items = null };
         }

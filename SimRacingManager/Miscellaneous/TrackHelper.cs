@@ -8,7 +8,7 @@ public static class TrackHelper
     {
         var daysRemaining = date - DateTime.Now;
         
-        string? localRemainingValue = null;
+        var localRemainingValue = string.Empty;
         var localRemainingColour = Color.Default;
         
         if (daysRemaining.Days > 1)

@@ -13,7 +13,7 @@ public class Track : BaseModel
     public Guid Guid { get; set; }
     
     [Column("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     
     [Column("date")]
     public DateTime Date { get; set; }
@@ -23,7 +23,7 @@ public class Track : BaseModel
     
     //
     
-    public string? Countdown;
+    public string Countdown = string.Empty;
     public Color CountdownColour;
     public Status Status = Status.Next;
     public Color StatusColour;

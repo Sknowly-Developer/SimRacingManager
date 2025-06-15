@@ -13,5 +13,5 @@ public class Vehicles : BaseModel
     public Guid DriverGuid { get; set; }
     
     [Column("type")]
-    public string VehicleType { get; set; }
+    public string? VehicleType { get; set; }
 }

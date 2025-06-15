@@ -11,13 +11,13 @@
 </MudDialog>
 
 @code {
-    private TimeSpan? _totalRaceTime = new TimeSpan(00, 45, 00);
-    private TimeSpan? _averageLapTime = TimeSpan.Zero;
+    private TimeSpan _totalRaceTime = new(00, 45, 00);
+    private TimeSpan _averageLapTime = TimeSpan.Zero;
     private double _totalLaps;
 
-    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] private IMudDialogInstance? MudDialog { get; set; }
 
-    private void Cancel() => MudDialog.Cancel();
+    private void Cancel() => MudDialog?.Cancel();
 
     private void CalculateLaps()
     {

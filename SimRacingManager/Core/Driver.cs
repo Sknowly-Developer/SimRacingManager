@@ -10,15 +10,15 @@ public class Driver : BaseModel
     public Guid Guid { get; set; }
     
     [Column("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Column("surname")]
-    public string Surname { get; set; }
+    public string? Surname { get; set; }
     
     [Column("number")]
     public int Number { get; set; }
 
     public int Position;
     public int Points;
-    public string VehicleType;
+    public string? VehicleType;
 }

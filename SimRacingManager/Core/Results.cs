@@ -15,7 +15,7 @@ public class Results : BaseModel
     
     [Column("driver")]
     public Guid DriverGuid { get; set; }
-    public Driver Driver;
+    public Driver Driver = new();
     
     [Column("points")]
     public int Points { get; set; }
@@ -89,12 +89,15 @@ public class Results : BaseModel
     /// <summary>
     /// Set the VehicleType of this Driver, so it shows within every track results page.
     /// </summary>
-    public async Task<string?> AssignDriverVehicles()
+    public async Task<string> AssignDriverVehicles()
     {
-        string? vehicleType = null;
+        var vehicleType = string.Empty;
         
         try
         {
+            if (Globals.LastSelectedChampionship == null)
+                throw new NullReferenceException();
+            
             vehicleType = await DatabaseManager.FetchVehiclesFromChampionship(Globals.LastSelectedChampionship, DriverGuid);
         }
         catch (Exception e)
