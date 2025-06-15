@@ -34,11 +34,11 @@ public class Championship : BaseModel
     
     //
     
-    public Driver Winner;
+    public Driver? Winner;
     public Track? Next;
     public string CombinedDates;
-    public Status Status;
-    public Color StatusColour;
+    public Status Status = Status.Upcoming;
+    public Color StatusColour = Color.Warning;
     public Color NextColour;
     private Dictionary<Status, Color> _statusColourDictionary = [];
     public int TracksCompleted;
@@ -58,17 +58,13 @@ public class Championship : BaseModel
 
     private void SetStatus()
     {
-        if (TracksGuid == null)
-        {
-            Status = Status.Upcoming;
-        }
-        else if (DateTime.Today < Tracks[0].Date)
-        {
-            Status = Status.Upcoming;
-        }
-        else if (DateTime.Today < Tracks[Tracks.Count - 1].Date)
+        if (DateTime.Today < Tracks[Tracks.Count - 1].Date)
         {
             Status = Status.Ongoing;
+        }
+        else if (DateTime.Today > Tracks[Tracks.Count - 1].Date)
+        {
+            Status = Status.Completed;
         }
     }
     

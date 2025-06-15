@@ -9,12 +9,11 @@
 
 @* TODO: Add each year in dynamically as well *@
 @* TODO: Need to filter by Year again *@
-<MudTable ServerData="FetchChampionships" Hover="true" RowClass="cursor-pointer" T="Championship" OnRowClick="RowClickEvent">
+<MudTable ServerData="FetchChampionships" GroupHeaderStyle="background-color:var(--mud-palette-background-gray)" GroupBy="@_championshipGroupDefinition" Hover="true" RowClass="cursor-pointer" T="Championship" OnRowClick="RowClickEvent">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">2025 Season</MudText>
+        <MudText Typo="Typo.h6">All Championships</MudText>
     </ToolBarContent>
     <ColGroup>
-        <col />
         <col />
         <col />
         <col />
@@ -25,7 +24,6 @@
     </ColGroup>
     <HeaderContent>
         <MudTh>Name</MudTh>
-        <MudTh>Year</MudTh>
         <MudTh>Next</MudTh>
         <MudTh>Races</MudTh>
         <MudTh>Period</MudTh>
@@ -33,9 +31,11 @@
         <MudTh>Car Class</MudTh>
         <MudTh Style="text-align: center">Status</MudTh>
     </HeaderContent>
+    <GroupHeaderTemplate>
+        <MudTh colspan="8">@($"{context.Key} {context.GroupName}")</MudTh>
+    </GroupHeaderTemplate>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Year">@context.Year</MudTd>
         @if (context.Next == null || context.TimeRemainingUntilNextTrack == null)
         {
             <MudTd DataLabel="Next"></MudTd>
@@ -53,17 +53,24 @@
             <MudTd DataLabel="Races">@context.TracksCompleted / @context.Tracks.Count</MudTd>
         }
         <MudTd DataLabel="Period">@context.CombinedDates</MudTd>
-        @if (context.Status == Status.Completed)
+        @if (context.Winner != null)
         {
-            <MudTd DataLabel="Leader">🎉 @context.Winner.Name @context.Winner.Surname 🎉</MudTd>
-        }
-        else if (context.Winner.Points == 0)
-        {
-            <MudTd DataLabel="Leader"></MudTd>
+            @if (context.Status == Status.Completed)
+            {
+                <MudTd DataLabel="Leader">🎉 @context.Winner.Name @context.Winner.Surname 🎉</MudTd>
+            }
+            else if (context.Winner.Points == 0)
+            {
+                <MudTd DataLabel="Leader"></MudTd>
+            }
+            else
+            {
+                <MudTd DataLabel="Leader">@context.Winner.Name @context.Winner.Surname</MudTd>   
+            }   
         }
         else
         {
-            <MudTd DataLabel="Leader">@context.Winner.Name @context.Winner.Surname</MudTd>   
+            <MudTd DataLabel="Leader"></MudTd>
         }
         <MudTd DataLabel="Car Class">@context.CarClass</MudTd>
         <MudTd DataLabel="Status"><MudChip T="string" Label="true" Color="@context.StatusColour">@context.Status</MudChip></MudTd>
@@ -77,6 +84,13 @@
 </MudTable>
 
 @code {
+    
+    private TableGroupDefinition<Championship> _championshipGroupDefinition = new()
+    {
+        GroupName = "Championships",
+        Selector = championship => championship.Year
+    };
+    
     private void RowClickEvent(TableRowClickEventArgs<Championship> tableRowClickEventArgs)
     {
         Navigation.NavigateTo($"ChampionshipDetails/{tableRowClickEventArgs.Item.Guid}");
@@ -84,14 +98,12 @@
 
     private async Task<TableData<Championship>> FetchChampionships(TableState state, CancellationToken token)
     {
-        var championshipModels = await DatabaseManager.SupabaseClient.From<Championship>()
-            .Get();
+        var championshipModels = await DatabaseManager.SupabaseClient.From<Championship>().Get();
 
         foreach (var championship in championshipModels.Models)
         {
             if (championship.TracksGuid == null)
             {
-                championship.Initialise();
                 break;
             }
             
@@ -120,7 +132,7 @@
         
         var totalItems = championshipModels.Models.Count;
 
-        var pagedData = championshipModels.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList().OrderByDescending(championship => championship.Name); // Need to sort it here otherwise the data is all messed up when it's fetched.
+        var pagedData = championshipModels.Models.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList().OrderByDescending(championship => championship.Name).OrderByDescending(championship => championship.Year); // Need to sort names and years here otherwise the data is all messed up when it's queried.
 
         return new TableData<Championship> { TotalItems = totalItems, Items = pagedData };
     }
@@ -137,10 +149,5 @@
 
         var sortedDrivers = tempDriverList.OrderByDescending(driver => driver.Points).ToList();
         championship.Winner = sortedDrivers[0];
-
-        if (championship.Winner.Points == 0)
-        {
-            
-        }
     }
 }
