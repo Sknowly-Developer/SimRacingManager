@@ -35,13 +35,13 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Year">@context.Year</MudTd>
-        @if (context.Next == null)
+        @if (context.Next == null || context.TimeRemainingUntilNextTrack == "")
         {
             <MudTd DataLabel="Next"></MudTd>
         }
         else
         {
-            <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="Color.Primary">@context.TimeRemainingNextTrack Days</MudChip></MudTd>
+            <MudTd DataLabel="Next">@context.Next.Name in <MudChip T="DateTime" Label="true" Color="Color.Primary">@context.TimeRemainingUntilNextTrack</MudChip></MudTd>
         }
         @if (context.TracksGuid == null)
         {
