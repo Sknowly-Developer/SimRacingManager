@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using SimRacingManager.Components;
 using MudBlazor.Services;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddMudServices();
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 

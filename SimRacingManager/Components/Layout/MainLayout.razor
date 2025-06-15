@@ -1,11 +1,12 @@
-﻿@using SimRacingManager.Core
+﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@using SimRacingManager.Core
 @using SimRacingManager.Data
 @using SimRacingManager.Miscellaneous
 
 @inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider" />
 <MudPopoverProvider />
 
 <MudDialogProvider /> @* Needed for dialogs *@
@@ -21,8 +22,8 @@
             </MudText>
         </MudBadge>
         <MudSpacer/>
-        <MudTooltip Text="@(_isDarkMode ? "Light Mode" : "Dark Mode")" Arrow="true" Placement="Placement.Bottom">
-            <MudToggleIconButton @bind-Toggled="_isDarkMode" Icon="@Icons.Material.Outlined.DarkMode" Color="@Color.Inherit" ToggledColor="@Color.Default" ToggledIcon="@Icons.Material.Filled.LightMode" /> @* TODO: Make it so you can choose Auto as an option as well, so the theme matches your system's theme *@
+        <MudTooltip Text="@selectedTooltip" Arrow="true" Placement="Placement.Bottom">
+            <MudIconButton Color="@Color.Inherit" Icon="@selectedIcon" OnClick="@((e) => ToggleDarkMode(true))"/>
         </MudTooltip>
         <MudText Align="Align.End">@_currentDate.ToShortDateString()</MudText>
     </MudAppBar>
@@ -40,11 +41,46 @@
 </div>
 
 @code {
-    private DateTime _currentDate = DateTime.Today;
+    private readonly DateTime _currentDate = DateTime.Today;
     private const string CurrentVersion = "PRE-ALPHA";
+    private MudThemeProvider? _mudThemeProvider;
+
+    private string selectedIcon;
+    private string selectedTooltip;
     
-    private MudTheme _theme = new();
-    private bool _isDarkMode; // TODO: Need to make it so this theme is stored in local storage, so it doesn't reset the next time you browse to the page.
+    private bool _isDarkMode;
+    private int _toggleAmount;
+
+    private async void ToggleDarkMode(bool toggle)
+    {
+        if (toggle) _toggleAmount++;
+        if (_toggleAmount >= 3) _toggleAmount = 0;
+        
+        switch (_toggleAmount)
+        {
+            case 0:
+                selectedIcon = Icons.Material.Filled.LightMode;
+                selectedTooltip = "Light Mode";
+                break;
+            case 1:
+                selectedIcon = Icons.Material.Filled.AutoMode;
+                selectedTooltip = "Auto Mode";
+                break;
+            case 2:
+                selectedIcon = Icons.Material.Outlined.DarkMode;
+                selectedTooltip = "Dark Mode";
+                break;
+        }
+
+        _isDarkMode = _toggleAmount switch
+        {
+            0 => true,
+            1 => false,
+            2 => await _mudThemeProvider.GetSystemDarkModeAsync(),
+            _ => _isDarkMode
+        };
+        StateHasChanged();
+    }
     
     protected override void OnInitialized()
     {
@@ -58,7 +94,35 @@
                 DatabaseManager.FetchAllData();
             }
         }
-
         Globals.HasDatabaseManagerBeenInitialised = true;
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var contains = await LocalStorage.ContainKeyAsync("toggleAmount");
+            if (!contains)
+            {
+                _toggleAmount = 2;
+                _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+                ToggleDarkMode(false);
+                await LocalStorage.SetItemAsync("toggleAmount", _toggleAmount);
+            }
+            else
+            {
+                _toggleAmount = await LocalStorage.GetItemAsync<int>("toggleAmount");
+                _isDarkMode = _toggleAmount switch
+                {
+                    0 => true,
+                    1 => false,
+                    2 => await _mudThemeProvider.GetSystemDarkModeAsync(),
+                    _ => _isDarkMode
+                };
+                ToggleDarkMode(false);
+            }
+            StateHasChanged();
+        }
+        await LocalStorage.SetItemAsync("toggleAmount", _toggleAmount);
     }
 }
